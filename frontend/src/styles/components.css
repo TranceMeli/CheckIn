@@ -7,7 +7,7 @@
         "nav footer";
     grid-template-columns: 220px 1fr;
     grid-template-rows: 60px 1fr auto;
-    min-height: 100vh;
+    height: 100vh; /* wichtig: feste Höhe damit Grid die volle Seite füllt */
 }
 
 /* ===== HEADER ===== */
@@ -51,9 +51,7 @@
     background: var(--nav);
     display: flex;
     flex-direction: column;
-    position: sticky;
-    top: 0;
-    height: 100vh;
+    /* kein height: 100vh mehr – Grid übernimmt das */
     overflow-y: auto;
 }
 
@@ -169,7 +167,7 @@
     line-height: 1;
 }
 
-/* ===== TABELLE (Mitarbeiterliste) ===== */
+/* ===== TABELLE ===== */
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -220,10 +218,10 @@
     font-weight: 600;
 }
 
-.badge--office     { background: #D1FAE5; color: #065F46; }
-.badge--homeoffice { background: #FEF3C7; color: #78350F; }
-.badge--abwesend   { background: #FEE2E2; color: #7F1D1D; }
-.badge--admin      { background: #E0F2FE; color: #075985; }
+.badge--office      { background: #CCFBF1; color: #065F46; }
+.badge--homeoffice  { background: #FEF3C7; color: #78350F; }
+.badge--abwesend    { background: #FEE2E2; color: #7F1D1D; }
+.badge--admin       { background: #E0F2FE; color: #075985; }
 .badge--mitarbeiter { background: #F0FDFB; color: #0D9488; border: 1px solid #99F6E4; }
 
 /* ===== RESPONSIVE ===== */
@@ -235,20 +233,18 @@
             "footer";
         grid-template-columns: 1fr;
         grid-template-rows: 60px 1fr auto;
+        height: auto;
+        min-height: 100vh;
     }
 
     .nav { display: none; }
-
     .main { padding: 16px; }
-
     .stats-cards { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 480px) {
     .stats-cards { grid-template-columns: 1fr; }
-
     .data-table { font-size: 12px; }
-
     .data-table th,
     .data-table td { padding: 9px 10px; }
 }
