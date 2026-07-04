@@ -1,0 +1,571 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\services\\checkinservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\services\\checkinservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\models\\checkin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\models\\checkin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\models\\attendancestatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\models\\attendancestatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\createuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\createuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\inviteuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\inviteuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\kursstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\kursstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\setpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\setpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\models\\refreshtoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\models\\refreshtoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\models\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\models\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\controllers\\checkincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\controllers\\checkincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\services\\invitationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\services\\invitationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\checkinexportdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\checkinexportdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\authresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\authresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\services\\icheckinservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\services\\icheckinservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\checkinstatusdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\checkinstatusdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\checkindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\checkindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\checkinstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\checkinstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|c:\\checkin_2.0\\ihk_abschlussprojekt_24-2_melanieschadl\\abschlussprojekt\\backend\\dto\\checkinlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34AC13D8-FDD6-406C-9B27-35BDFED7023A}|backend\\backend.csproj|solutionrelative:backend\\dto\\checkinlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/CheckInApiDb/True/SqlTable/dbo.CheckIns.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "InviteUserDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\InviteUserDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\InviteUserDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\InviteUserDto.cs",
+              "RelativeToolTip": "backend\\Dto\\InviteUserDto.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAwA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T09:23:22.548Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CreateUserDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CreateUserDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\CreateUserDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CreateUserDto.cs",
+              "RelativeToolTip": "backend\\Dto\\CreateUserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T15:00:25.942Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AttendanceStatus.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\AttendanceStatus.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\AttendanceStatus.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\AttendanceStatus.cs",
+              "RelativeToolTip": "backend\\Models\\AttendanceStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T08:19:38.395Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CheckIn.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\CheckIn.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\CheckIn.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\CheckIn.cs",
+              "RelativeToolTip": "backend\\Models\\CheckIn.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T10:24:15.81Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "backend\\Services\\AuthService.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\AuthService.cs",
+              "RelativeToolTip": "backend\\Services\\AuthService.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAvwHAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T11:59:48.792Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CheckInService.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\CheckInService.cs",
+              "RelativeDocumentMoniker": "backend\\Services\\CheckInService.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\CheckInService.cs",
+              "RelativeToolTip": "backend\\Services\\CheckInService.cs",
+              "ViewState": "AgIAAHYAAAAAAAAAAAAkwIoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T18:45:28.886Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "KursStatsDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\KursStatsDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\KursStatsDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\KursStatsDto.cs",
+              "RelativeToolTip": "backend\\Dto\\KursStatsDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T21:57:12.657Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LoginDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\LoginDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\LoginDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\LoginDto.cs",
+              "RelativeToolTip": "backend\\Dto\\LoginDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-03T21:58:46.813Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SetPasswordDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\SetPasswordDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\SetPasswordDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\SetPasswordDto.cs",
+              "RelativeToolTip": "backend\\Dto\\SetPasswordDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-04T12:41:51.679Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "RefreshToken.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\RefreshToken.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\RefreshToken.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\RefreshToken.cs",
+              "RelativeToolTip": "backend\\Models\\RefreshToken.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwBcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-28T13:06:08.532Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "JwtSettings.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\JwtSettings.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\JwtSettings.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\JwtSettings.cs",
+              "RelativeToolTip": "backend\\Models\\JwtSettings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T09:56:17.443Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\UserController.cs",
+              "RelativeToolTip": "backend\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAwwAAAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T19:40:13.715Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\User.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\User.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Models\\User.cs",
+              "RelativeToolTip": "backend\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T19:40:35.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UserDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\UserDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\UserDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\UserDto.cs",
+              "RelativeToolTip": "backend\\Dto\\UserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T13:48:41.037Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "SeedData.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Data\\SeedData.cs",
+              "RelativeDocumentMoniker": "backend\\Data\\SeedData.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Data\\SeedData.cs",
+              "RelativeToolTip": "backend\\Data\\SeedData.cs",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAuwEcAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T10:21:19.708Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "backend\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "backend\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAA1wBEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T15:00:34.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CheckInController.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\CheckInController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\CheckInController.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\CheckInController.cs",
+              "RelativeToolTip": "backend\\Controllers\\CheckInController.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAkwDQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T18:58:08.573Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "backend\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAswFgAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T14:38:45.39Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "backend\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwB8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T14:38:40.767Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\appsettings.json",
+              "RelativeDocumentMoniker": "backend\\appsettings.json",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\appsettings.json",
+              "RelativeToolTip": "backend\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-06-14T12:37:09.68Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Program.cs",
+              "RelativeDocumentMoniker": "backend\\Program.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Program.cs",
+              "RelativeToolTip": "backend\\Program.cs",
+              "ViewState": "AgIAALsAAAAAAAAAAAAiwNgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T21:46:50.77Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "backend\\Services\\UserService.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\UserService.cs",
+              "RelativeToolTip": "backend\\Services\\UserService.cs",
+              "ViewState": "AgIAALUAAAAAAAAAAAAuwMgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T14:44:07.319Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\IUserService.cs",
+              "RelativeDocumentMoniker": "backend\\Services\\IUserService.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\IUserService.cs",
+              "RelativeToolTip": "backend\\Services\\IUserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwBMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T14:53:36.826Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "InvitationService.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\InvitationService.cs",
+              "RelativeDocumentMoniker": "backend\\Services\\InvitationService.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\InvitationService.cs",
+              "RelativeToolTip": "backend\\Services\\InvitationService.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAuwC8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-29T09:43:44.135Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "CheckInExportDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInExportDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\CheckInExportDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInExportDto.cs",
+              "RelativeToolTip": "backend\\Dto\\CheckInExportDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T09:01:56.88Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\IAuthService.cs",
+              "RelativeDocumentMoniker": "backend\\Services\\IAuthService.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\IAuthService.cs",
+              "RelativeToolTip": "backend\\Services\\IAuthService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-28T13:26:45.681Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "AuthResponseDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\AuthResponseDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\AuthResponseDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\AuthResponseDto.cs",
+              "RelativeToolTip": "backend\\Dto\\AuthResponseDto.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAwA4AAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-03T21:58:38.245Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "ICheckInService.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\ICheckInService.cs",
+              "RelativeDocumentMoniker": "backend\\Services\\ICheckInService.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Services\\ICheckInService.cs",
+              "RelativeToolTip": "backend\\Services\\ICheckInService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T18:45:24.481Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "CheckInStatusDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInStatusDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\CheckInStatusDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInStatusDto.cs",
+              "RelativeToolTip": "backend\\Dto\\CheckInStatusDto.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T18:46:17.6Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "CheckInDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\CheckInDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInDto.cs",
+              "RelativeToolTip": "backend\\Dto\\CheckInDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T15:00:20.114Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "CheckInListDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInListDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\CheckInListDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInListDto.cs",
+              "RelativeToolTip": "backend\\Dto\\CheckInListDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T10:23:42.467Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "CheckInStatsDto.cs",
+              "DocumentMoniker": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInStatsDto.cs",
+              "RelativeDocumentMoniker": "backend\\Dto\\CheckInStatsDto.cs",
+              "ToolTip": "C:\\CheckIn_2.0\\IHK_Abschlussprojekt_24-2_MelanieSchadl\\Abschlussprojekt\\backend\\Dto\\CheckInStatsDto.cs",
+              "RelativeToolTip": "backend\\Dto\\CheckInStatsDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-08T21:42:05.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "dbo.CheckIns.sql",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/CheckInApiDb/True/SqlTable/dbo.CheckIns.sql",
+              "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/CheckInApiDb/True/SqlTable/dbo.CheckIns.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-04-17T13:21:31.084Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

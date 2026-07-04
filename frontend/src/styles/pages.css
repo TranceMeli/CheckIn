@@ -1,0 +1,174 @@
+/* ===== LOGIN ===== */
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px 36px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.login-container h1 {
+    font-size: 1.5rem;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.account-icon {
+    width: 80px;
+    height: 80px;
+    color: var(--primary);
+    margin: 8px 0 16px;
+}
+
+.login-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-container label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.lBtn {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    padding: 11px;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    margin-top: 8px;
+    transition: background 0.15s;
+}
+
+.lBtn:hover {
+    background: var(--primary-hover);
+}
+
+/* ===== CHECKIN PAGE ===== */
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    width: 260px;
+    height: 340px;
+    border: 3px solid hsl(var(--color));
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    cursor: pointer;
+    transition: background 0.18s, transform 0.12s;
+    box-shadow: var(--shadow);
+}
+
+.card:hover {
+    background: hsl(var(--color) / 0.12);
+    transform: translateY(-2px);
+}
+
+.card.active {
+    background: hsl(var(--color) / 0.15);
+    border-width: 3px;
+    box-shadow: 0 0 0 3px hsl(var(--color) / 0.2);
+}
+
+.card.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.card input[type="radio"] {
+    display: none;
+}
+
+.card-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1;
+    gap: 12px;
+    color: hsl(var(--color));
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.card-action {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* ===== SET PASSWORD ===== */
+.set-password-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    padding: 20px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .login-container {
+        padding: 28px 20px;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 340px;
+        height: 240px;
+    }
+}

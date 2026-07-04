@@ -1,0 +1,97 @@
+/* ===== CSS VARIABLEN – Steel & Teal ===== */
+:root {
+    --nav:           #263445;
+    --nav-light:     #2f4157;
+    --nav-muted:     rgba(255,255,255,0.07);
+    --primary:       #0D9488;
+    --primary-hover: #0b7c76;
+    --primary-light: #F0FDFB;
+    --bg:            #F0FDFB;
+    --surface:       #FFFFFF;
+    --border:        #D1E8E6;
+    --text:          #1A2E2D;
+    --text-muted:    #5E7B7A;
+    --success:       #10B981;
+    --danger:        #EF4444;
+    --warning:       #F59E0B;
+
+    --color-office:      #10B981;
+    --color-homeoffice:  #F59E0B;
+    --color-abwesend:    #EF4444;
+
+    --radius:    8px;
+    --radius-lg: 12px;
+    --shadow:    0 1px 3px rgba(38,52,69,0.08);
+    --shadow-md: 0 4px 16px rgba(38,52,69,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+}
+
+h1, h2, h3 {
+    margin: 0 0 8px;
+    font-weight: 600;
+    color: var(--nav);
+}
+
+button {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--radius);
+    border: none;
+    padding: 8px 18px;
+    transition: background 0.15s, opacity 0.15s;
+}
+
+button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+select {
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+input {
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    width: 100%;
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color 0.15s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
