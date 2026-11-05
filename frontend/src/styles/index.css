@@ -18,36 +18,41 @@
     --color-homeoffice:  #F59E0B;
     --color-abwesend:    #EF4444;
 
-    --radius:    8px;
-    --radius-lg: 12px;
+    --radius:    0.5rem;
+    --radius-lg: 0.75rem;
     --shadow:    0 1px 3px rgba(38,52,69,0.08);
     --shadow-md: 0 4px 16px rgba(38,52,69,0.12);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
+html {
+    /* fluid: 16px auf Handy/Laptop, ~20px auf 24" Full-HD, max 24px */
+    font-size: clamp(16px, 0.5vw + 10.5px, 24px);
+    -webkit-text-size-adjust: 100%;
+}
+
 html, body, #root {
     height: 100%;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 15px;
     color: var(--text);
     background: var(--bg);
 }
 
 h1, h2, h3 {
-    margin: 0 0 8px;
+    margin: 0 0 0.5rem;
     font-weight: 600;
     color: var(--nav);
 }
 
 button {
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 500;
     border-radius: var(--radius);
     border: none;
-    padding: 8px 18px;
+    padding: 0.5rem 1.125rem;
     transition: background 0.15s, opacity 0.15s;
 }
 
@@ -57,13 +62,13 @@ button:disabled {
 }
 
 select {
-    height: 40px;
-    padding: 0 12px;
+    height: 2.5rem;
+    padding: 0 0.75rem;
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
     background: var(--surface);
     color: var(--text);
-    font-size: 14px;
+    font-size: 0.875rem;
     cursor: pointer;
 }
 
@@ -73,11 +78,11 @@ select:focus {
 }
 
 input {
-    height: 40px;
-    padding: 0 12px;
+    height: 2.5rem;
+    padding: 0 0.75rem;
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
-    font-size: 14px;
+    font-size: 0.875rem;
     width: 100%;
     color: var(--text);
     background: var(--surface);

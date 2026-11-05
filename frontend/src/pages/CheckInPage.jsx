@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
-import { Home, Building2, Clock } from "lucide-react";
+import { Home, Building2, Clock, CheckCircle2 } from "lucide-react";
 import Button from "../components/Button";
 import { toast, Toaster } from "react-hot-toast";
 
@@ -48,13 +48,11 @@ function CheckInPage() {
     };
 
     return (
-        <>
+        <div className="checkin-page">
             <Toaster position="top-center" />
             {checkedInToday && (
-                <p style={{
-                    textAlign: "center", padding: "12px 0 0",
-                    color: "#5E7B7A", fontSize: 14
-                }}>
+                <p className="checkin-note" role="status">
+                    <CheckCircle2 size={28} aria-hidden="true" />
                     Du hast heute bereits eingecheckt.
                 </p>
             )}
@@ -93,7 +91,7 @@ function CheckInPage() {
                     );
                 })}
             </div>
-        </>
+        </div>
     );
 }
 

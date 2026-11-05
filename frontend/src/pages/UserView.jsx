@@ -1,202 +1,93 @@
-import { api } from "../api/api";
-
 import { useState, useEffect } from "react";
-import {
-    PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-    BarChart, XAxis, YAxis, Legend, Bar, CartesianGrid
-} from "recharts";
+import { Building2, ClipboardCheck, Home, Plane } from "lucide-react";
+import { api } from "../api/api";
+import "../styles/dashboard.css";
 import StatCard from "../components/StatCard";
-
-const FARBEN = {
-    HomeOffice: "#F59E0B",
-    Office:     "#0D9488",
-    Abwesend:   "#EF4444",
-};
-
-const JAHRE = [2024, 2025, 2026];
-const MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni",
-    "Juli", "August", "September", "Oktober", "November", "Dezember"];
-
-const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload?.length) {
-        return (
-            <div style={{
-                background: "#fff", border: "1.5px solid #D1E8E6",
-                borderRadius: 8, padding: "10px 14px", fontSize: 13
-            }}>
-                <p style={{ margin: 0, fontWeight: 600, color: "#263445" }}>{label}</p>
-                {payload.map(p => (
-                    <p key={p.name} style={{ margin: "4px 0 0", color: p.fill }}>
-                        {p.name}: <strong>{p.value}</strong>
-                    </p>
-                ))}
-            </div>
-        );
-    }
-    return null;
-};
-
-const CustomPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-    if (percent < 0.05) return null;
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    return (
-        <text x={x} y={y} fill="#fff" textAnchor="middle" dominantBaseline="central"
-            fontSize={12} fontWeight={600}>
-            {`${(percent * 100).toFixed(0)}%`}
-        </text>
-    );
-};
+import Karte from "../components/Karte";
+import PeriodBar from "../components/PeriodBar";
+import { FARBEN } from "../components/chartConfig";
+import {
+    TrendChart, WeekdayChart, TargetMeter, YearHeatmap, StatusDonut,
+} from "../components/DashboardCharts";
+import { JAHR, iso, clampToYear, zeitraum } from "../utils/zeitraum";
 
 function UserView() {
-    
-    const [stats, setStats] = useState(null);
-    const [gesamtStats, setGesamtStats] = useState(null);
+    const [periode, setPeriode] = useState("month");
+    const [anker, setAnker] = useState(() => clampToYear(new Date()));
+    const [overview, setOverview] = useState(null);
+    const [verlauf, setVerlauf] = useState([]);
+    const [heatmap, setHeatmap] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [fehler, setFehler] = useState("");
 
-    const [filter, setFilter] = useState({
-        monat: new Date().getMonth() + 1,
-        jahr: new Date().getFullYear(),
-    });
-
-    const handleFilter = (e) => {
-        const { name, value } = e.target;
-        setFilter(prev => ({ ...prev, [name]: value }));
-    };
+    const { von, bis, label } = zeitraum(periode, anker);
 
     useEffect(() => {
+        let aktuell = true;
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
-        const params = new URLSearchParams();
-        if (filter.monat) params.append("monat", filter.monat);
-        if (filter.jahr) params.append("jahr", filter.jahr);
+        api.get("/CheckIn/dashboard/overview", { params: { von: iso(von), bis: iso(bis) } })
+            .then(res => { if (aktuell) { setOverview(res.data); setFehler(""); } })
+            .catch(() => aktuell && setFehler("Deine Statistik konnte nicht geladen werden."))
+            .finally(() => aktuell && setLoading(false));
+        return () => { aktuell = false; };
+    }, [periode, anker]); // eslint-disable-line react-hooks/exhaustive-deps
 
-        api.get(`/CheckIn/stats/me?${params.toString()}`)
-            .then(res => setStats(res.data))
-            .catch(err => console.error(err))
-            .finally(() => setLoading(false));
-    }, [filter]);
-
+    // Jahresverlauf und Heatmap hängen nicht vom gewählten Zeitraum ab
     useEffect(() => {
-        const params = new URLSearchParams();
-        params.append("jahr", filter.jahr);
-        api.get(`/CheckIn/stats/me?${params.toString()}`)
-            .then(res => setGesamtStats(res.data))
-            .catch(err => console.error(err));
-    }, [filter.jahr]);
+        let aktuell = true;
+        Promise.all([
+            api.get("/CheckIn/dashboard/verlauf", { params: { jahr: JAHR } }),
+            api.get("/CheckIn/dashboard/heatmap", { params: { jahr: JAHR } }),
+        ])
+            .then(([v, h]) => { if (aktuell) { setVerlauf(v.data); setHeatmap(h.data); } })
+            .catch(() => aktuell && setFehler("Deine Statistik konnte nicht geladen werden."));
+        return () => { aktuell = false; };
+    }, []);
 
-    if (loading) return <p style={{ padding: 24, color: "#5E7B7A" }}>Lädt...</p>;
-    if (!stats) return <p style={{ padding: 24, color: "#5E7B7A" }}>Keine Daten verfügbar</p>;
-
-    const pieData = [
-        { name: "Home Office", value: gesamtStats?.homeOfficeCount ?? 0 },
-        { name: "Office",      value: gesamtStats?.officeCount ?? 0 },
-        { name: "Abwesend",    value: gesamtStats?.abwesendCount ?? 0 },
-    ].filter(d => d.value > 0);
-
-    const pieColors = { "Home Office": FARBEN.HomeOffice, Office: FARBEN.Office, Abwesend: FARBEN.Abwesend };
-
-    const barData = stats.monthly?.length > 0
-        ? stats.monthly.map(d => ({
-            Datum: d.date,
-            "Home Office": d.homeOffice,
-            Office: d.office,
-            Abwesend: d.abwesend,
-        }))
-        : [{
-            Datum: MONATE[filter.monat - 1],
-            "Home Office": stats.homeOfficeCount,
-            Office: stats.officeCount,
-            Abwesend: stats.abwesendCount,
-        }];
-
-    const statItems = [
-        { key: "homeOffice", label: "Home Office", value: stats.homeOfficeCount, color: FARBEN.HomeOffice },
-        { key: "office",     label: "Office",      value: stats.officeCount,     color: FARBEN.Office },
-        { key: "abwesend",   label: "Abwesend",    value: stats.abwesendCount,   color: FARBEN.Abwesend },
-    ];
+    const g = overview?.gesamt;
 
     return (
-        <div className="user-view">
-            <h2>Meine Statistik</h2>
-
-            <div className="filter-row">
-                <select name="monat" value={filter.monat} onChange={handleFilter}>
-                    {MONATE.map((m, i) => (
-                        <option key={i + 1} value={i + 1}>{m}</option>
-                    ))}
-                </select>
-                <select name="jahr" value={filter.jahr} onChange={handleFilter}>
-                    {JAHRE.map(j => <option key={j} value={j}>{j}</option>)}
-                </select>
+        <div className="dashboard">
+            <div className="dash-head">
+                <h1>Meine Statistik</h1>
+                <PeriodBar periode={periode} onPeriode={setPeriode} anker={anker} onAnker={setAnker} label={label} />
             </div>
 
-            <div className="stats-cards">
-                <StatCard label="Gesamt (Jahr)" value={gesamtStats?.total ?? 0} />
-                {statItems.map(item => (
-                    <StatCard key={item.key} label={item.label} value={item.value} color={item.color} />
-                ))}
-            </div>
+            {fehler && <p className="form-error" role="alert">{fehler}</p>}
 
-            {stats.total === 0 ? (
-                <div className="chart-box" style={{ textAlign: "center", padding: 40, color: "#5E7B7A" }}>
-                    Keine Einträge für diesen Zeitraum
-                </div>
-            ) : (
-                <div className="charts-row">
-                    {gesamtStats?.total > 0 && (
-                        <div className="chart-box">
-                            <h3>Jahresübersicht {filter.jahr}</h3>
-                            <ResponsiveContainer width="100%" height={260}>
-                                <PieChart>
-                                    <Pie
-                                        data={pieData}
-                                        dataKey="value"
-                                        nameKey="name"
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={55}
-                                        outerRadius={95}
-                                        paddingAngle={3}
-                                        labelLine={false}
-                                        label={CustomPieLabel}
-                                    >
-                                        {pieData.map(entry => (
-                                            <Cell key={entry.name} fill={pieColors[entry.name]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip content={<CustomTooltip />} />
-                                    <Legend
-                                        formatter={(value) => (
-                                            <span style={{ fontSize: 13, color: "#263445" }}>{value}</span>
-                                        )}
-                                    />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                    )}
-
-                    <div className="chart-box">
-                        <h3>{MONATE[filter.monat - 1]} {filter.jahr} – Tagesverlauf</h3>
-                        <ResponsiveContainer width="100%" height={260}>
-                            <BarChart data={barData} margin={{ top: 8, right: 8, left: -16, bottom: 4 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#E0F0EE" vertical={false} />
-                                <XAxis dataKey="Datum" tick={{ fontSize: 12, fill: "#5E7B7A" }} />
-                                <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "#5E7B7A" }} />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Legend formatter={(value) => (
-                                    <span style={{ fontSize: 13, color: "#263445" }}>{value}</span>
-                                )} />
-                                <Bar dataKey="Home Office" fill={FARBEN.HomeOffice} radius={[4,4,0,0]} />
-                                <Bar dataKey="Office"      fill={FARBEN.Office}     radius={[4,4,0,0]} />
-                                <Bar dataKey="Abwesend"    fill={FARBEN.Abwesend}   radius={[4,4,0,0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
+            <div className={`dash-body${loading ? " is-loading" : ""}`} aria-busy={loading}>
+                {g && (
+                    <div className="stats-cards">
+                        <StatCard label="Office-Tage" value={g.office} color={FARBEN.office} icon={<Building2 size={20} />} />
+                        <StatCard label="Home-Office-Tage" value={g.homeOffice} color={FARBEN.homeOffice} icon={<Home size={20} />} />
+                        <StatCard label="Abwesend (Tage)" value={g.abwesend} color={FARBEN.abwesend} icon={<Plane size={20} />} />
+                        <StatCard label="Check-ins gesamt" value={g.total} color={FARBEN.nav} icon={<ClipboardCheck size={20} />} />
                     </div>
+                )}
+
+                <div className="charts-row charts-row--wide">
+                    <Karte titel="Meine Office-Quote im Jahresverlauf" hinweis="Ziel 60 %">
+                        <TrendChart data={verlauf} />
+                    </Karte>
+                    <Karte titel="Ziel-Quote" hinweis={label}>
+                        <TargetMeter office={g?.office ?? 0} total={g?.total ?? 0} />
+                    </Karte>
                 </div>
-            )}
+
+                <div className="charts-row">
+                    <Karte titel="Verteilung" hinweis={label}>
+                        <StatusDonut data={g ?? { office: 0, homeOffice: 0, abwesend: 0 }} />
+                    </Karte>
+                    <Karte titel="Meine Wochentage" hinweis={label}>
+                        <WeekdayChart data={overview?.wochentage ?? []} />
+                    </Karte>
+                </div>
+
+                <Karte titel="Office-Anteil pro Kalenderwoche" hinweis={`${JAHR}`} className="chart-box--full">
+                    <YearHeatmap data={heatmap} />
+                </Karte>
+            </div>
         </div>
     );
 }

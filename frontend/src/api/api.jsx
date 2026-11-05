@@ -42,7 +42,10 @@ api.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // Der Refresh-Aufruf selbst (z. B. beim App-Start ohne Cookie) darf keinen Logout/Redirect auslösen
+        const isRefreshCall = originalRequest?.url?.includes("/Auth/refresh");
+
+        if (error.response?.status === 401 && !originalRequest._retry && !isRefreshCall) {
             if (isRefreshing) {
                 // Andere Requests warten bis Refresh fertig ist
                 return new Promise((resolve, reject) => {

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import accountIcon from "../assets/account_icon.svg";
 import { Toaster, toast } from "react-hot-toast";
+import Footer from "../components/Footer";
 
 const Login = () => {
     const { login } = useAuth();
@@ -73,6 +74,7 @@ const Login = () => {
                     <button className="lBtn" type="submit">Einloggen</button>
                 </form>
             </div>
+            <Footer className="login-footer" />
         </div>
     );
 };

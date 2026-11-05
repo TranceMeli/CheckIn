@@ -3,7 +3,7 @@ import { api } from "../api/api";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const JAHRE = [2024, 2025, 2026];
+const JAHRE = [2026]; // Demodaten existieren nur für 2026
 const MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 const SPALTEN = ["Datum", "Vorname", "Nachname", "Status", "Abteilung"];
 
@@ -13,14 +13,14 @@ function ExportTable() {
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
         monat: new Date().getMonth() + 1,
-        jahr: new Date().getFullYear(),
+        jahr: JAHRE[JAHRE.length - 1],
         abteilung: "",
         userId: "",
     });
 
     // Abteilungen dynamisch aus Userliste laden
     useEffect(() => {
-        api.get("/User")
+        api.get("/User/mitarbeiter")
             .then(res => {
                 const unique = [...new Set(res.data.map(u => u.abteilung).filter(Boolean))].sort();
                 setAbteilungen(unique);
@@ -103,6 +103,7 @@ function ExportTable() {
             ) : data.length === 0 ? (
                 <p>Keine Einträge für diesen Zeitraum</p>
             ) : (
+                <div className="table-scroll">
                 <table className="export-table__table">
                     <thead>
                         <tr>{SPALTEN.map(s => <th key={s}>{s}</th>)}</tr>
@@ -119,6 +120,7 @@ function ExportTable() {
                         ))}
                     </tbody>
                 </table>
+                </div>
             )}
         </div>
     );

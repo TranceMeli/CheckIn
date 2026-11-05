@@ -1,39 +1,28 @@
+import { Outlet } from "react-router";
+import { CheckCircle2 } from "lucide-react";
 import Navbar from "../components/Navbar";
-import { Outlet } from "react-router"
-import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import DateTime from "..//components/DateTime";
+import UserMenu from "../components/UserMenu";
+import Footer from "../components/Footer";
 
+const MainLayout = () => (
+    <div className="layout-container">
+        <header className="topbar">
+            <div className="topbar__logo">
+                <CheckCircle2 size={20} aria-hidden="true" />
+                CheckIn
+            </div>
+            <Navbar variant="top" />
+            <span className="topbar__spacer" />
+            <UserMenu />
+        </header>
 
+        <main className="main">
+            <Outlet />
+            <Footer />
+        </main>
 
-
-const MainLayout = () => {
-
-const {user, logout } = useAuth();
-
-const navigate = useNavigate();
-
-const handleLogout = () => {
-    logout();
-    navigate("/login");
-    }
-    return (
-        <div className="layout-container">
-            <div className="header">
-                <span className="user">Eingeloggt als {user?.email}</span>
-    
-              {/* <div className="showDate"><DateTime /></div> */}
-
-              <button onClick={handleLogout}>Abmelden</button>
-              </div>
-
-    <div className="nav"><Navbar></Navbar></div>
-    <div className="main">
-<Outlet />
+        <Navbar variant="tab" />
     </div>
-      
-        <div className="footer"></div>
-        </div>
-    );
-};
+);
+
 export default MainLayout;

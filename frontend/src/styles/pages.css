@@ -1,52 +1,53 @@
 .login-page {
+    position: relative;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--bg);
-    padding: 20px;
+    padding: 1.25rem;
 }
 
 .login-container {
     width: 100%;
-    max-width: 420px;
+    max-width: 26.25rem;
     background: var(--surface);
     border: 1.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 40px 36px;
+    padding: 2.5rem 2.25rem;
     box-shadow: var(--shadow-md);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .login-container h1 {
     font-size: 1.5rem;
     color: var(--nav);
     text-align: center;
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
 }
 
 .account-icon {
-    width: 80px;
-    height: 80px;
+    width: 7rem;
+    height: 7rem;
     color: var(--primary);
-    margin: 8px 0 16px;
+    margin: 0.5rem 0 1rem;
 }
 
 .login-container form {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0.75rem;
 }
 
 .login-container label {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     color: var(--text-muted);
     width: 100%;
@@ -58,12 +59,12 @@
     width: 100%;
     background: var(--primary);
     color: #fff;
-    padding: 11px;
+    padding: 0.6875rem;
     border-radius: var(--radius);
-    font-size: 15px;
+    font-size: 0.9375rem;
     font-weight: 600;
     border: none;
-    margin-top: 8px;
+    margin-top: 0.5rem;
     transition: background 0.15s;
 }
 
@@ -73,11 +74,13 @@
 
 /* ===== CHECKIN PAGE ===== */
 .container {
-    display: flex;
-    gap: 20px;
-    padding: 24px;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 Felder nebeneinander, auf schmalen Geräten untereinander */
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 1.5rem 0;
 }
 
 .card {
@@ -86,8 +89,7 @@
     align-items: center;
     position: relative;
     flex-direction: column;
-    width: 260px;
-    height: 340px;
+    min-height: 18rem;
     border: 3px solid hsl(var(--color));
     border-radius: var(--radius-lg);
     background: var(--surface);
@@ -118,13 +120,14 @@
 }
 
 .card-center {
+    padding-bottom: 3rem; /* Platz für den Einchecken-Button */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     flex: 1;
-    gap: 12px;
+    gap: 0.75rem;
     color: hsl(var(--color));
 }
 
@@ -136,7 +139,7 @@
 
 .card-action {
     position: absolute;
-    bottom: 14px;
+    bottom: 0.875rem;
     left: 0;
     right: 0;
     display: flex;
@@ -149,23 +152,46 @@
     align-items: center;
     justify-content: center;
     background: var(--bg);
-    padding: 20px;
+    padding: 1.25rem;
 }
 
 @media (max-width: 600px) {
     .login-container {
-        padding: 28px 20px;
+        padding: 1.75rem 1.25rem;
     }
 
-    .container {
-        flex-direction: column;
-        align-items: center;
-        padding: 16px;
-    }
+    .container { padding: 1rem 0; }
 
-    .card {
-        width: 100%;
-        max-width: 340px;
-        height: 240px;
-    }
+
+    .card { min-height: 14rem; }
 }
+@media (max-width: 700px) {
+    .container { grid-template-columns: minmax(0, 1fr); max-width: 26rem; }
+    .checkin-note { flex-direction: column; gap: 0.4rem; }
+}
+
+/* Check-in-Seite: Hinweis und Karten mittig im Inhaltsbereich */
+.checkin-page {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.checkin-page .container { padding: 0; }
+
+.checkin-note {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--nav);
+    text-align: center;
+}
+
+.checkin-note svg { color: var(--primary); flex-shrink: 0; }
