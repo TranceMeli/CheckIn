@@ -126,48 +126,59 @@ namespace backend.Services
                 .ToList();
         }
 
-        public async Task<CheckInStatusDto?> AdminCheckInAsync(string userId, AttendanceStatus status)
+        // Check-in für einen beliebigen vergangenen Tag. Existiert schon ein Eintrag, wird er nur mit overwrite = true ersetzt.
+        public async Task<AdminCheckInResultDto?> AdminSetCheckInAsync(
+            string userId, DateTime? datum, AttendanceStatus status, bool overwrite)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return null;
 
-            var today = DateTime.UtcNow.Date;
+            var tag = (datum ?? DateTime.UtcNow).Date;
+            var ende = tag.AddDays(1);
 
             var existing = await _context.CheckIns
-                .FirstOrDefaultAsync(c => c.UserId == userId && c.Timestamp.Date == today);
+                .FirstOrDefaultAsync(c => c.UserId == userId && c.Timestamp >= tag && c.Timestamp < ende);
+
+            var ergebnis = new AdminCheckInResultDto { Datum = tag.ToString("yyyy-MM-dd") };
 
             if (existing != null)
             {
-                return new CheckInStatusDto
+                if (!overwrite)
                 {
-                    AlreadyCheckedIn = true,
-                    UserId = existing.UserId,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Status = existing.Status,
-                    Timestamp = existing.Timestamp,
-                };
+                    ergebnis.BestehenderStatus = existing.Status;
+                    return ergebnis;
+                }
+                existing.Status = status;
+            }
+            else
+            {
+                _context.CheckIns.Add(new CheckIn
+                {
+                    UserId = userId,
+                    Status = status,
+                    Timestamp = tag == DateTime.UtcNow.Date ? DateTime.UtcNow : tag.AddHours(8),
+                });
             }
 
-            var checkIn = new CheckIn
-            {
-                UserId = userId,
-                Timestamp = DateTime.UtcNow,
-                Status = status,
-            };
-
-            _context.CheckIns.Add(checkIn);
             await _context.SaveChangesAsync();
+            ergebnis.Gespeichert = true;
+            return ergebnis;
+        }
 
-            return new CheckInStatusDto
-            {
-                AlreadyCheckedIn = false,
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Status = checkIn.Status,
-                Timestamp = checkIn.Timestamp,
-            };
+        public async Task<List<CheckInEintragDto>> GetCheckInsAsync(string userId, DateTime von, DateTime bis)
+        {
+            var start = von.Date;
+            var ende = bis.Date.AddDays(1);
+
+            var eintraege = await _context.CheckIns
+                .Where(c => c.UserId == userId && c.Timestamp >= start && c.Timestamp < ende)
+                .OrderByDescending(c => c.Timestamp)
+                .Select(c => new { c.Timestamp, c.Status })
+                .ToListAsync();
+
+            return eintraege
+                .Select(c => new CheckInEintragDto { Datum = c.Timestamp.ToString("yyyy-MM-dd"), Status = c.Status })
+                .ToList();
         }
 
         public async Task<List<CheckInExportDto>> GetExportAsync(

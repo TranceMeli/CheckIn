@@ -14,7 +14,8 @@ namespace backend.Services
             int? monat,
             int? jahr);
         Task<List<AbteilungStatsDto>> GetAbteilungStatsAsync(int? monat, int? jahr);
-        Task<CheckInStatusDto?> AdminCheckInAsync(string userId, AttendanceStatus status);
+        Task<AdminCheckInResultDto?> AdminSetCheckInAsync(string userId, DateTime? datum, AttendanceStatus status, bool overwrite);
+        Task<List<CheckInEintragDto>> GetCheckInsAsync(string userId, DateTime von, DateTime bis);
         Task<List<CheckInExportDto>> GetExportAsync(string? abteilung, string? userId, int? monat, int? jahr);
     }
 }

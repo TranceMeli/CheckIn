@@ -51,11 +51,38 @@ namespace backend.Controllers
             return Ok(stats);
         }
 
-        [HttpPost("{userId}/checkin")]
-        public async Task<IActionResult> AdminCheckIn(string userId, [FromBody] CheckInDto dto)
+        [HttpGet("mitarbeiter")]
+        public async Task<IActionResult> GetMitarbeiter()
         {
-            var result = await _userService.AdminCheckInAsync(userId, dto.Status);
+            var mitarbeiter = await _userService.GetMitarbeiterAsync();
+            return Ok(mitarbeiter.OrderBy(m => m.Abteilung).ThenBy(m => m.LastName));
+        }
+
+        [HttpGet("{userId}/checkins")]
+        public async Task<IActionResult> GetCheckIns(string userId, [FromQuery] DateTime von, [FromQuery] DateTime bis)
+        {
+            if (bis < von) return BadRequest("Ungültiger Zeitraum");
+            return Ok(await _userService.GetCheckInsAsync(userId, von, bis));
+        }
+
+        // Nachtragen: legt einen Check-in für einen vergangenen Tag an; existiert schon einer, antwortet 409
+        [HttpPost("{userId}/checkin")]
+        public async Task<IActionResult> AdminCheckIn(string userId, [FromBody] AdminCheckInDto dto)
+            => await SetCheckIn(userId, dto, overwrite: false);
+
+        // Korrigieren: ersetzt einen bestehenden Check-in
+        [HttpPut("{userId}/checkin")]
+        public async Task<IActionResult> AdminCorrectCheckIn(string userId, [FromBody] AdminCheckInDto dto)
+            => await SetCheckIn(userId, dto, overwrite: true);
+
+        private async Task<IActionResult> SetCheckIn(string userId, AdminCheckInDto dto, bool overwrite)
+        {
+            if (dto.Datum?.Date > DateTime.UtcNow.Date)
+                return BadRequest("Check-ins können nicht für die Zukunft nachgetragen werden");
+
+            var result = await _userService.AdminSetCheckInAsync(userId, dto.Datum, dto.Status, overwrite);
             if (result == null) return NotFound("Mitarbeiter nicht gefunden");
+            if (!result.Gespeichert) return Conflict(result);
             return Ok(result);
         }
 
