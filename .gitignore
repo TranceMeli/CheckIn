@@ -35,3 +35,6 @@ Thumbs.db
 
 .idea/
 .vscode/
+
+# Lokale Arbeitsunterlagen, nicht Teil des Projekts
+docs/DASHBOARD_PROMPT.md
