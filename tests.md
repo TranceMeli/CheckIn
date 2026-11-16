@@ -78,9 +78,3 @@ Diese Fehler traten auf und sind jetzt abgesichert:
 - Mitarbeiter-Endpunkte dürfen keine Daten anderer Personen enthalten.
 
 Zur Kontrolle habe ich einzelne Korrekturen testweise zurückgenommen. Die jeweiligen Tests schlugen dann fehl.
-
-## Bekannte Lücken
-
-- Ohne Tests sind `App.jsx`, `DateTime.jsx`, `Toast.jsx`, `AdminList.jsx` und `Unauthorized.jsx` (0 % laut Abdeckungsbericht); `main.jsx` ist aus der Messung ausgenommen. Die Diagramme `TrendChart`, `WeekdayChart` usw. sind mit echten Daten nicht getestet, weil Recharts im jsdom eine Pixelgröße braucht. Getestet werden nur deren Leerzustände.
-- Ein Teil der `Dashboards.test.jsx`-Tests ersetzt die Diagramme durch Platzhalter. Sie prüfen Datenfluss und Parameter, nicht das Aussehen.
-- Es gibt keine End-to-End-Tests im Browser und keine CI-Pipeline.

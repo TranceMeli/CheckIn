@@ -323,7 +323,7 @@ npm test
 npm run test:coverage
 ```
 
-287 automated tests: 105 for the backend (unit tests for the services and seed data, plus integration tests that run the whole API in memory with authentication and roles) and 182 for the frontend (utilities, API client, components, routing and pages). All pass, and the frontend coverage is 86 % of statements. Details, screenshots and known gaps are in [tests.md](tests.md).
+287 automated tests: 105 for the backend (unit tests for the services and seed data, plus integration tests that run the whole API in memory with authentication and roles) and 182 for the frontend (utilities, API client, components, routing and pages). All pass, and the frontend coverage is 86 % of statements. Details and screenshots are in [tests.md](tests.md).
 
 ---
 
@@ -442,7 +442,7 @@ For real use, replace the placeholder texts and have them reviewed legally.
 ## Known limitations
 
 - There is no e-mail service: users cannot be invited by e-mail, accounts come from the seed data.
-- No CI pipeline and no end-to-end tests in a browser, see [tests.md](tests.md).
+- No CI pipeline and no end-to-end tests in a browser.
 - Demo accounts have fixed, well-known passwords. They are only created in the `Development` environment, so never run a production deployment as `Development`.
 - The demo data and all year filters are limited to 2026.
 
