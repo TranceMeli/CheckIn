@@ -1,7 +1,7 @@
 # CheckIn
 
 ![Version](https://img.shields.io/badge/version-3.0-0D9488?style=for-the-badge)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-512BD4?style=for-the-badge&logo=dotnet)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-10.0-512BD4?style=for-the-badge&logo=dotnet)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
 ![MSSQL](https://img.shields.io/badge/MSSQL-LocalDB-CC2927?style=for-the-badge&logo=microsoftsqlserver)
 ![Entity Framework](https://img.shields.io/badge/Entity_Framework-Core-512BD4?style=for-the-badge)
@@ -137,11 +137,12 @@ Since this app was built for a German-speaking workplace, some domain terms appe
 ## Tech Stack
 
 ### Backend
-- ASP.NET Core 8 Web API
+- ASP.NET Core 10 Web API (.NET 10, LTS)
 - Entity Framework Core with MSSQL (LocalDB for development)
 - ASP.NET Core Identity for user management
 - JWT Bearer authentication with refresh token rotation
 - Roles: `Admin`, `Mitarbeiter` (Employee)
+- Tests: xUnit, `WebApplicationFactory`, EF Core InMemory
 
 ### Frontend
 - React 19 with Vite
@@ -151,6 +152,7 @@ Since this app was built for a German-speaking workplace, some domain terms appe
 - lucide-react for icons
 - react-hot-toast for notifications
 - jsPDF + jspdf-autotable for PDF export
+- Tests: Vitest, React Testing Library, jsdom
 
 ---
 
@@ -158,6 +160,7 @@ Since this app was built for a German-speaking workplace, some domain terms appe
 
 ```
 CheckIn/
+├── backend.Tests/        xUnit tests (unit and API integration)
 ├── backend/
 │   ├── Controllers/
 │   │   ├── AdminController.cs
@@ -203,6 +206,7 @@ CheckIn/
 │   │   ├── InvitationService.cs
 │   │   └── UserService.cs
 │   └── Program.cs
+├── tests.md              test overview and results
 └── frontend/
     ├── src/
     │   ├── api/
@@ -259,7 +263,7 @@ CheckIn/
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [Node.js 18+](https://nodejs.org/)
 - SQL Server LocalDB (included with Visual Studio) or a full SQL Server instance
 
@@ -280,9 +284,7 @@ dotnet ef database update
 dotnet run --launch-profile https
 ```
 
-The first run automatically seeds the database with an admin account, sample employees and check-ins for every weekday of 2026. Seeding is idempotent: missing days are added, existing entries stay untouched, and employees from older versions are moved to the current department names.
-
-> Only the .NET 10 runtime installed? Run with `DOTNET_ROLL_FORWARD=Major` so the .NET 8 project can start.
+In the `Development` environment the first run automatically seeds the database with an admin account, sample employees and check-ins for every weekday of 2026. Seeding is idempotent: missing days are added, existing entries stay untouched, and employees from older versions are moved to the current department names.
 
 **Default credentials (fictional demo accounts):**
 
@@ -306,6 +308,22 @@ npm run dev
 ```
 
 The backend only accepts requests from the origins listed in the CORS policy in `backend/Program.cs` (`localhost` ports 5173, 5174 and 5176). If Vite picks another port because 5173 is busy, add that origin there or free the port.
+
+---
+
+## Testing
+
+```bash
+# Backend (from the repository root)
+dotnet test backend.Tests/backend.Tests.csproj
+
+# Frontend
+cd frontend
+npm test
+npm run test:coverage
+```
+
+287 automated tests: 105 for the backend (unit tests for the services and seed data, plus integration tests that run the whole API in memory with authentication and roles) and 182 for the frontend (utilities, API client, components, routing and pages). All pass, and the frontend coverage is 86 % of statements. Details, screenshots and known gaps are in [tests.md](tests.md).
 
 ---
 
@@ -424,8 +442,8 @@ For real use, replace the placeholder texts and have them reviewed legally.
 ## Known limitations
 
 - There is no e-mail service: users cannot be invited by e-mail, accounts come from the seed data.
-- No automated tests and no CI.
-- Seed data creates accounts with fixed, well-known passwords on every start; restrict seeding to development before deploying.
+- No CI pipeline and no end-to-end tests in a browser, see [tests.md](tests.md).
+- Demo accounts have fixed, well-known passwords. They are only created in the `Development` environment, so never run a production deployment as `Development`.
 - The demo data and all year filters are limited to 2026.
 
 ---
