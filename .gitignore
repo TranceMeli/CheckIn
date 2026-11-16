@@ -38,3 +38,7 @@ Thumbs.db
 
 # Lokale Arbeitsunterlagen, nicht Teil des Projekts
 docs/DASHBOARD_PROMPT.md
+
+# Testlaeufe
+coverage/
+TestResults/

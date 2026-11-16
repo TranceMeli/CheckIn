@@ -186,18 +186,22 @@ var app = builder.Build();
 app.UseRequestLocalization();
 
 
-using (var scope = app.Services.CreateScope())
+// Demo-Konten und Demo-Daten gibt es nur in der Entwicklung (nicht in Produktion oder in Tests)
+if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
 
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-    await SeedData.SeedAdminAsync(userManager, roleManager);
-    await SeedData.SeedUsersAsync(userManager);
-    await SeedData.SeedCheckInsAsync(context, userManager);
+        await SeedData.SeedAdminAsync(userManager, roleManager);
+        await SeedData.SeedUsersAsync(userManager);
+        await SeedData.SeedCheckInsAsync(context, userManager);
 
-    
+        
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -215,3 +219,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Macht die Klasse für WebApplicationFactory in den Integrationstests sichtbar
+public partial class Program { }
