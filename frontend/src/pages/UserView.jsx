@@ -24,14 +24,14 @@ function UserView() {
 
     useEffect(() => {
         let aktuell = true;
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Ladezustand muss vor dem Request gesetzt werden
         setLoading(true);
         api.get("/CheckIn/dashboard/overview", { params: { von: iso(von), bis: iso(bis) } })
             .then(res => { if (aktuell) { setOverview(res.data); setFehler(""); } })
             .catch(() => aktuell && setFehler("Deine Statistik konnte nicht geladen werden."))
             .finally(() => aktuell && setLoading(false));
         return () => { aktuell = false; };
-    }, [periode, anker]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [periode, anker]); // eslint-disable-line react-hooks/exhaustive-deps -- von/bis ergeben sich aus periode und anker
 
     // Jahresverlauf und Heatmap hängen nicht vom gewählten Zeitraum ab
     useEffect(() => {

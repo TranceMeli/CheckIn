@@ -50,7 +50,7 @@ const STATUS_LEGENDE = [
 
 const Leer = ({ text = "Keine Daten für diesen Zeitraum" }) => <p className="chart-empty">{text}</p>;
 
-// D1 – Office-Quote im Jahresverlauf
+// Office-Quote im Jahresverlauf (Fläche mit Ziellinie)
 export function TrendChart({ data }) {
     const animate = useAnimation();
     const punkte = data.map(m => ({
@@ -76,7 +76,7 @@ export function TrendChart({ data }) {
     );
 }
 
-// D2 – Verteilung nach Wochentag (prozentual gestapelt)
+// Verteilung nach Wochentag (prozentual gestapelt)
 export function WeekdayChart({ data }) {
     const animate = useAnimation();
     if (!data.some(d => d.total > 0)) return <Leer />;
@@ -101,7 +101,7 @@ export function WeekdayChart({ data }) {
     );
 }
 
-// D3 – Abteilungen in Prozent (100 % gestapelt, horizontal)
+// Abteilungsvergleich (100 % gestapelt, horizontal)
 export function DepartmentShareChart({ data }) {
     const animate = useAnimation();
     const achsenBreite = useAchsenBreite();
@@ -127,7 +127,7 @@ export function DepartmentShareChart({ data }) {
     );
 }
 
-// D4 – Ziel-Quote als Meter
+// Ziel-Quote als Meter
 export function TargetMeter({ office, total }) {
     const q = quote(office, total);
     const erreicht = q >= ZIEL_QUOTE;
@@ -152,7 +152,7 @@ export function TargetMeter({ office, total }) {
     );
 }
 
-// D5 – Jahres-Heatmap (eine Zelle pro Kalenderwoche)
+// Jahres-Heatmap (eine Zelle pro Kalenderwoche)
 export function YearHeatmap({ data }) {
     return (
         <>
@@ -178,7 +178,7 @@ export function YearHeatmap({ data }) {
     );
 }
 
-// D6 – Abwesenheiten je Abteilung
+// Abwesenheiten je Abteilung (höchster Wert hervorgehoben)
 export function AbsenceChart({ data }) {
     const animate = useAnimation();
     const achsenBreite = useAchsenBreite();

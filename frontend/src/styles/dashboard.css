@@ -220,7 +220,7 @@
     }
 }
 
-/* ===== DASHBOARD (Option B) ===== */
+/* Dashboard */
 .dash-head {
     display: flex;
     flex-wrap: wrap;
@@ -354,7 +354,7 @@
 
 .chart-empty { text-align: center; color: var(--text-muted); padding: 2.5rem 1rem; margin: 0; }
 
-/* Meter (D4) */
+/* Ziel-Meter */
 .meter-box__value { font-size: 1.75rem; font-weight: 600; color: var(--nav); }
 .meter-box__value span { font-size: 0.8125rem; font-weight: 400; color: var(--text-muted); margin-left: 0.4rem; }
 
@@ -373,7 +373,7 @@
 .meter-box__note { margin: 0.9rem 0 0; font-size: 0.875rem; color: var(--text-muted); }
 .meter-box__note.is-ok { color: hsl(174 80% 24%); }
 
-/* Heatmap (D5) */
+/* Jahres-Heatmap */
 .heatmap {
     display: grid;
     grid-template-columns: repeat(26, minmax(0, 1fr));

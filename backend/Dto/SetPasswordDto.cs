@@ -4,7 +4,6 @@ namespace backend.Dto
 {
     public class SetPasswordDto
     {
-        // set password
 
         [Required]
         public string UserId { get; set; } = string.Empty;

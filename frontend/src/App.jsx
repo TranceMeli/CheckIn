@@ -1,4 +1,3 @@
-import './styles/App.css';
 import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import Login from './pages/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -22,7 +21,6 @@ function App() {
   <Route path="/login" element={<Login />} />
   <Route path="/impressum" element={<Impressum />} />
   <Route path="/datenschutz" element={<Datenschutz />} />
-  {/* <Route path="/checkin" element={<CheckInPage />} /> */}
 
   <Route element={<ProtectedRoute />}>
   <Route element={<MainLayout />}>

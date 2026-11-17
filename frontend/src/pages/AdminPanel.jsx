@@ -54,14 +54,14 @@ function AdminDashboard() {
 
     useEffect(() => {
         let aktuell = true;
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Ladezustand muss vor dem Request gesetzt werden
         setLoading(true);
         api.get("/Dashboard/overview", { params: { ...filterParams, von: iso(von), bis: iso(bis) } })
             .then(res => { if (aktuell) { setOverview(res.data); setFehler(""); } })
             .catch(() => aktuell && setFehler("Auswertung konnte nicht geladen werden."))
             .finally(() => aktuell && setLoading(false));
         return () => { aktuell = false; };
-    }, [filterParams, periode, anker]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [filterParams, periode, anker]); // eslint-disable-line react-hooks/exhaustive-deps -- von/bis ergeben sich aus periode und anker
 
     useEffect(() => {
         let aktuell = true;

@@ -35,12 +35,9 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 
-
-// Datenbank
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity hinzufügen
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
@@ -49,7 +46,6 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// JWT Authentifizierung hinzufügen
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 
@@ -74,36 +70,11 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
 
-            //NameClaimType = JwtRegisteredClaimNames.Sub,
-            //RoleClaimType = ClaimTypes.Role,
 
         };
 
-        //options.Events = new JwtBearerEvents
-        //{
-        //    OnMessageReceived = ctx =>
-        //    {
-        //        ctx.Request.Cookies.TryGetValue("accessToken", out var accessToken);
-
-        //        if (string.IsNullOrEmpty(accessToken))
-        //        {
-        //            accessToken = ctx.Request.Headers["Authorization"]
-        //            .ToString()
-        //            .Replace("Bearer ", "");
-
-        //        }
-
-        //        if (!string.IsNullOrEmpty(accessToken))
-        //            ctx.Token =accessToken;
-
-        //        return Task.CompletedTask;
-        //    }
-
-        //};
     });
 
-
-// password policy
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -117,7 +88,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 });
 
-// Add services to the container.
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -146,11 +116,9 @@ builder.Services.AddCors(options =>
 
     });
 });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddEndpointsApiExplorer();
 
-// token validation in swaggger
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -204,7 +172,6 @@ if (app.Environment.IsDevelopment())
     }
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -214,7 +181,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowReact");
-app.UseAuthentication(); // immer vor authorisierung
+app.UseAuthentication(); // muss vor UseAuthorization stehen
 app.UseAuthorization();
 app.MapControllers();
 

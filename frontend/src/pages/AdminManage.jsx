@@ -4,8 +4,8 @@ import { toast, Toaster } from "react-hot-toast";
 import { api } from "../api/api";
 import "../styles/dashboard.css";
 import "../styles/manage.css";
+import { JAHR } from "../utils/zeitraum";
 
-const JAHR = 2026; // Demodaten existieren nur für 2026
 
 const STATUS = [
     { value: "Office", label: "Office", icon: <Building2 size={20} aria-hidden="true" />, klasse: "office" },
@@ -71,7 +71,7 @@ function AdminManage() {
         } catch {
             toast.error("Einträge konnten nicht geladen werden.");
         }
-    }, [userId, datum.slice(0, 7)]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [userId, datum.slice(0, 7)]); // eslint-disable-line react-hooks/exhaustive-deps -- nur der Monat von datum ist relevant
 
     useEffect(() => { ladeEintraege(); }, [ladeEintraege]);
 

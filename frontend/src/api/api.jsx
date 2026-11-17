@@ -60,7 +60,6 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                // Cookie wird automatisch mitgeschickt (withCredentials: true)
                 const res = await axios.post(
                     "https://localhost:7005/api/Auth/refresh",
                     {},

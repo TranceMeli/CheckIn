@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { api } from "../api/api";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { JAHR } from "../utils/zeitraum";
 
-const JAHRE = [2026]; // Demodaten existieren nur für 2026
+const JAHRE = [JAHR];
 const MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 const SPALTEN = ["Datum", "Vorname", "Nachname", "Status", "Abteilung"];
 
@@ -18,7 +19,6 @@ function ExportTable() {
         userId: "",
     });
 
-    // Abteilungen dynamisch aus Userliste laden
     useEffect(() => {
         api.get("/User/mitarbeiter")
             .then(res => {
@@ -29,7 +29,7 @@ function ExportTable() {
     }, []);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Ladezustand muss vor dem Request gesetzt werden
         setLoading(true);
         const params = new URLSearchParams();
         if (filter.monat) params.append("monat", filter.monat);

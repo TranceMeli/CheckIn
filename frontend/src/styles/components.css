@@ -1,4 +1,4 @@
-/* ===== LAYOUT ===== */
+/* LAYOUT */
 .layout-container {
     display: grid;
     grid-template-areas:
@@ -11,7 +11,7 @@
     height: 100dvh;
 }
 
-/* ===== TOPBAR (Header + Navigation) ===== */
+/* TOPBAR (Header + Navigation) */
 .topbar {
     grid-area: top;
     position: sticky;
@@ -67,7 +67,7 @@
 
 .nav-tab { grid-area: tab; display: none; }
 
-/* ===== BENUTZER-MENÜ ===== */
+/* BENUTZER-MENÜ */
 .user-menu { position: relative; }
 
 .user-menu__trigger {
@@ -129,7 +129,7 @@
 
 .user-menu__item:hover { background: hsl(0 90% 96%); }
 
-/* ===== MAIN ===== */
+/* MAIN */
 .main {
     grid-area: main;
     display: flex;
@@ -140,7 +140,7 @@
     background: var(--bg);
 }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 .footer,
 .legal-footer,
 .login-footer {
@@ -187,7 +187,7 @@
 .legal-footer a:hover,
 .login-footer a:hover { color: var(--primary); text-decoration: underline; }
 
-/* ===== BUTTONS ===== */
+/* BUTTONS */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -213,7 +213,7 @@
 
 .btn--danger { background: var(--danger); color: #fff; }
 
-/* ===== STAT CARDS ===== */
+/* STAT CARDS */
 .stats-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10.75rem, 1fr));
@@ -277,7 +277,7 @@
     line-height: 1;
 }
 
-/* ===== TABELLE ===== */
+/* TABELLE */
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -334,7 +334,7 @@
 .badge--admin       { background: #E0F2FE; color: #075985; }
 .badge--mitarbeiter { background: #F0FDFB; color: #0D9488; border: 1px solid #99F6E4; }
 
-/* ===== RESPONSIVE ===== */
+/* RESPONSIVE */
 /* Tablet/Handy: Navigation wandert als Tab-Leiste an den unteren Rand */
 @media (max-width: 900px) {
     .topbar { padding: 0 1rem; }

@@ -17,12 +17,10 @@ namespace backend.Services
             _context = context;
             _userManager = userManager;
         }
-        // aktuellen status einchecken
         public async Task<CheckInStatusDto> CheckInAsync(string identifier, AttendanceStatus status)
         {
 
-            // status setzen
-            // user finden über email oder id
+            // Der Bezeichner ist die Benutzer-Id oder die E-Mail-Adresse
 
             var user = await _userManager.FindByIdAsync(identifier)
                 ?? await _userManager.FindByEmailAsync(identifier);
@@ -73,7 +71,6 @@ namespace backend.Services
             };
         }
 
-        // den letzten eintrag abfragen
 
         public async Task<CheckInStatusDto?> GetCurrentCheckInAsync(string userId)
         {
