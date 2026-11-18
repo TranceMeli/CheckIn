@@ -32,7 +32,7 @@ describe('MainLayout', () => {
     )
   }
 
-  it('zeigt Logo, Seiteninhalt und Footer', () => {
+  it('shows logo, page content and footer', () => {
     renderLayout({ email: 'admin@checkin.de', role: 'Admin' })
 
     expect(screen.getByText('CheckIn')).toBeInTheDocument()
@@ -41,20 +41,20 @@ describe('MainLayout', () => {
     expect(screen.getByRole('link', { name: 'Datenschutz' })).toBeInTheDocument()
   })
 
-  it('hat zwei Navigationen: oben für den Desktop und unten als Tab-Leiste', () => {
+  it('has two navigations: top for desktop and a tab bar at the bottom', () => {
     const { container } = renderLayout({ email: 'admin@checkin.de', role: 'Admin' })
 
     expect(container.querySelector('nav.nav-top')).not.toBeNull()
     expect(container.querySelector('nav.nav-tab')).not.toBeNull()
   })
 
-  it('zeigt das Benutzer-Icon für angemeldete Personen', () => {
+  it('shows the user icon for signed-in people', () => {
     renderLayout({ email: 'admin@checkin.de', role: 'Admin' })
 
     expect(screen.getByRole('button', { name: 'Benutzermenü' })).toBeInTheDocument()
   })
 
-  it('legt den Footer in den scrollenden Inhaltsbereich (auch auf dem Handy erreichbar)', () => {
+  it('puts the footer inside the scrolling content area (reachable on phones too)', () => {
     const { container } = renderLayout({ email: 'admin@checkin.de', role: 'Admin' })
 
     expect(container.querySelector('main.main footer')).not.toBeNull()
@@ -74,7 +74,7 @@ describe('ExportTable', () => {
       throw new Error(`Unerwartete Anfrage: ${url}`)
     })
 
-  it('lädt die Abteilungen nur aus der Mitarbeiterliste und sortiert sie', async () => {
+  it('takes the departments only from the employee list and sorts them', async () => {
     mockApi()
     render(<ExportTable />)
 
@@ -86,7 +86,7 @@ describe('ExportTable', () => {
     expect(api.get).not.toHaveBeenCalledWith('/User')
   })
 
-  it('zeigt die Zeilen des Exports', async () => {
+  it('shows the rows of the export', async () => {
     mockApi()
     render(<ExportTable />)
 
@@ -95,7 +95,7 @@ describe('ExportTable', () => {
     expect(screen.getAllByRole('row')).toHaveLength(3) // Kopf + 2
   })
 
-  it('bietet nur das Jahr 2026 an', async () => {
+  it('offers only the year 2026', async () => {
     mockApi()
     render(<ExportTable />)
     await screen.findByText('Anna')
@@ -105,7 +105,7 @@ describe('ExportTable', () => {
     expect(within(jahr).getAllByRole('option').map(o => o.textContent)).toEqual(['2026'])
   })
 
-  it('zeigt einen Leerzustand und sperrt die Downloads ohne Daten', async () => {
+  it('shows an empty state and disables the downloads without data', async () => {
     mockApi([])
     render(<ExportTable />)
 
@@ -114,7 +114,7 @@ describe('ExportTable', () => {
     expect(screen.getByRole('button', { name: 'PDF herunterladen' })).toBeDisabled()
   })
 
-  it('filtert den Export nach Abteilung', async () => {
+  it('filters the export by department', async () => {
     mockApi()
     render(<ExportTable />)
     await screen.findByText('Anna')
@@ -130,7 +130,7 @@ describe('ExportTable', () => {
     })
   })
 
-  it('erzeugt eine CSV mit BOM, Semikolon und Kopfzeile', async () => {
+  it('creates a CSV with BOM, semicolon and header row', async () => {
     mockApi()
     let blob
     URL.createObjectURL = vi.fn((b) => { blob = b; return 'blob:test' })

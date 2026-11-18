@@ -21,8 +21,8 @@ afterEach(() => {
   setAccessToken(null)
 })
 
-describe('Access Token', () => {
-  it('liegt nur im Speicher und lässt sich setzen und löschen', () => {
+describe('Access token', () => {
+  it('lives only in memory and can be set and cleared', () => {
     expect(getAccessToken()).toBeNull()
 
     setAccessToken('abc')
@@ -32,7 +32,7 @@ describe('Access Token', () => {
     expect(getAccessToken()).toBeNull()
   })
 
-  it('wird nie in localStorage oder sessionStorage geschrieben', () => {
+  it('is never written to localStorage or sessionStorage', () => {
     setAccessToken('geheim')
 
     expect(JSON.stringify({ ...localStorage })).not.toContain('geheim')
@@ -40,8 +40,8 @@ describe('Access Token', () => {
   })
 })
 
-describe('Request-Interceptor', () => {
-  it('hängt den Token als Bearer-Header an', async () => {
+describe('Request interceptor', () => {
+  it('attaches the token as a bearer header', async () => {
     const adapter = vi.fn(respond(200))
     api.defaults.adapter = adapter
     setAccessToken('token-1')
@@ -51,7 +51,7 @@ describe('Request-Interceptor', () => {
     expect(adapter.mock.calls[0][0].headers.Authorization).toBe('Bearer token-1')
   })
 
-  it('sendet ohne Token keinen Authorization-Header', async () => {
+  it('sends no Authorization header without a token', async () => {
     const adapter = vi.fn(respond(200))
     api.defaults.adapter = adapter
 
@@ -60,13 +60,13 @@ describe('Request-Interceptor', () => {
     expect(adapter.mock.calls[0][0].headers.Authorization).toBeUndefined()
   })
 
-  it('sendet Cookies mit (für das Refresh-Token)', () => {
+  it('sends cookies (for the refresh token)', () => {
     expect(api.defaults.withCredentials).toBe(true)
   })
 })
 
-describe('Response-Interceptor bei 401', () => {
-  it('holt einen neuen Token und wiederholt die Anfrage', async () => {
+describe('Response interceptor on 401', () => {
+  it('fetches a new token and retries the request', async () => {
     const adapter = vi.fn()
       .mockImplementationOnce(respond(401))
       .mockImplementationOnce(respond(200, { ok: true }))
@@ -83,7 +83,7 @@ describe('Response-Interceptor bei 401', () => {
     expect(adapter.mock.calls[1][0].headers.Authorization).toBe('Bearer neuer-token')
   })
 
-  it('wiederholt eine Anfrage nur einmal', async () => {
+  it('retries a request only once', async () => {
     const adapter = vi.fn(respond(401))
     api.defaults.adapter = adapter
     vi.spyOn(axios, 'post').mockResolvedValue({ data: { accessToken: 'neuer-token' } })
@@ -93,7 +93,7 @@ describe('Response-Interceptor bei 401', () => {
     expect(adapter).toHaveBeenCalledTimes(2) // Original + ein Wiederholungsversuch
   })
 
-  it('löst einen erzwungenen Logout aus, wenn das Erneuern scheitert', async () => {
+  it('forces a logout when the refresh fails', async () => {
     api.defaults.adapter = respond(401)
     vi.spyOn(axios, 'post').mockRejectedValue(new Error('Refresh abgelehnt'))
     const onLogout = vi.fn()
@@ -109,7 +109,7 @@ describe('Response-Interceptor bei 401', () => {
 
   // Regression: Beim App-Start ohne Cookie scheitert der Refresh mit 401. Das darf weder
   // einen Logout noch die Weiterleitung auf /login auslösen, sonst sind Impressum und Datenschutz nicht erreichbar.
-  it('behandelt ein 401 des Refresh-Aufrufs selbst nicht als Sitzungsablauf', async () => {
+  it('does not treat a 401 from the refresh call itself as an expired session', async () => {
     api.defaults.adapter = respond(401)
     const post = vi.spyOn(axios, 'post')
     const onLogout = vi.fn()
@@ -122,7 +122,7 @@ describe('Response-Interceptor bei 401', () => {
     expect(onLogout).not.toHaveBeenCalled()
   })
 
-  it('reicht andere Fehler (z. B. 403) unverändert durch', async () => {
+  it('passes other errors (e.g. 403) through unchanged', async () => {
     api.defaults.adapter = respond(403)
     const post = vi.spyOn(axios, 'post')
 
@@ -131,7 +131,7 @@ describe('Response-Interceptor bei 401', () => {
     expect(post).not.toHaveBeenCalled()
   })
 
-  it('reicht 409-Konflikte mit der Antwort durch', async () => {
+  it('passes 409 conflicts through with the response', async () => {
     api.defaults.adapter = respond(409, { bestehenderStatus: 'Office' })
 
     await expect(api.post('/User/1/checkin', {})).rejects.toMatchObject({

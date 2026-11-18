@@ -3,7 +3,7 @@ export const FARBEN = {
     homeOffice: "#F59E0B",
     abwesend: "#EF4444",
     nav: "#263445",
-    muted: "#5E7B7A",
+    muted: "#4F6B6A",
     grid: "#E0F0EE",
 };
 

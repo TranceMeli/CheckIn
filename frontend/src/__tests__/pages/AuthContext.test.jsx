@@ -56,8 +56,8 @@ beforeEach(() => {
   setAccessToken.mockReset()
 })
 
-describe('AuthProvider: Sitzung wiederherstellen', () => {
-  it('lädt zuerst und stellt die Sitzung aus dem Refresh-Cookie wieder her', async () => {
+describe('AuthProvider: restoring the session', () => {
+  it('loads first and restores the session from the refresh cookie', async () => {
     api.post.mockResolvedValue({ data: { accessToken: adminToken } })
     renderProvider()
 
@@ -70,7 +70,7 @@ describe('AuthProvider: Sitzung wiederherstellen', () => {
     expect(screen.getByTestId('rolle')).toHaveTextContent('Admin')
   })
 
-  it('bleibt ohne gültiges Cookie ausgeloggt und leitet nicht um', async () => {
+  it('stays signed out without a valid cookie and does not redirect', async () => {
     api.post.mockRejectedValue({ response: { status: 401 } })
     renderProvider()
 
@@ -81,12 +81,12 @@ describe('AuthProvider: Sitzung wiederherstellen', () => {
   })
 })
 
-describe('AuthProvider: Rollen', () => {
+describe('AuthProvider: roles', () => {
   beforeEach(() => {
     api.post.mockRejectedValue(new Error('kein Cookie'))
   })
 
-  it('erkennt Admins', async () => {
+  it('recognises admins', async () => {
     renderProvider()
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'))
 
@@ -96,7 +96,7 @@ describe('AuthProvider: Rollen', () => {
     expect(screen.getByTestId('mitarbeiter')).toHaveTextContent('false')
   })
 
-  it('erkennt Mitarbeiter', async () => {
+  it('recognises employees', async () => {
     renderProvider()
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'))
 
@@ -106,7 +106,7 @@ describe('AuthProvider: Rollen', () => {
     expect(screen.getByTestId('admin')).toHaveTextContent('false')
   })
 
-  it('ist ohne Anmeldung weder Admin noch Mitarbeiter', async () => {
+  it('is neither admin nor employee when signed out', async () => {
     renderProvider()
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'))
 
@@ -115,7 +115,7 @@ describe('AuthProvider: Rollen', () => {
   })
 })
 
-describe('AuthProvider: login und logout', () => {
+describe('AuthProvider: login and logout', () => {
   beforeEach(() => {
     api.post.mockImplementation(async (url) => {
       if (url === '/Auth/refresh') throw new Error('kein Cookie')
@@ -123,7 +123,7 @@ describe('AuthProvider: login und logout', () => {
     })
   })
 
-  it('login merkt sich den Token nur im Speicher und setzt den Benutzer', async () => {
+  it('login keeps the token in memory only and sets the user', async () => {
     renderProvider()
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'))
 
@@ -133,7 +133,7 @@ describe('AuthProvider: login und logout', () => {
     expect(screen.getByTestId('email')).toHaveTextContent('l.mueller@checkin.de')
   })
 
-  it('ignoriert einen unlesbaren Token, ohne abzustürzen', async () => {
+  it('ignores an unreadable token without crashing', async () => {
     renderProvider()
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'))
 
@@ -142,7 +142,7 @@ describe('AuthProvider: login und logout', () => {
     expect(screen.getByTestId('email')).toHaveTextContent('niemand')
   })
 
-  it('logout widerruft das Cookie, löscht den Token und geht zur Login-Seite', async () => {
+  it('logout revokes the cookie, clears the token and goes to the login page', async () => {
     renderProvider()
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'))
     await userEvent.click(screen.getByRole('button', { name: 'Admin-Login' }))
@@ -154,7 +154,7 @@ describe('AuthProvider: login und logout', () => {
     expect(await screen.findByText('Login-Seite')).toBeInTheDocument()
   })
 
-  it('meldet auch ab, wenn der Server beim Logout nicht erreichbar ist', async () => {
+  it('also signs out when the server is unreachable during logout', async () => {
     api.post.mockImplementation(async (url) => {
       if (url === '/Auth/logout') throw new Error('offline')
       throw new Error('kein Cookie')
@@ -169,7 +169,7 @@ describe('AuthProvider: login und logout', () => {
     expect(setAccessToken).toHaveBeenLastCalledWith(null)
   })
 
-  it('führt bei "auth:logout" (Refresh gescheitert) einen Logout ohne weiteren API-Aufruf aus', async () => {
+  it('logs out on "auth:logout" (refresh failed) without another API call', async () => {
     renderProvider()
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'))
     await userEvent.click(screen.getByRole('button', { name: 'Admin-Login' }))

@@ -129,9 +129,10 @@ dotnet test backend.Tests/backend.Tests.csproj   # backend, from the repository 
 cd frontend
 npm test                                         # frontend
 npm run lint
+npm run test:e2e                                 # browser tests, needs LocalDB and a one-time `npx playwright install chromium`
 ```
 
-287 automated tests (105 backend, 182 frontend) cover the services, the seed data, the API with authentication and roles, and the React components and pages. Results and screenshots are in [tests.md](tests.md).
+307 automated tests cover the services, the seed data, the API with authentication and roles, the React components and pages, and the main flows in a real browser: 105 backend, 182 frontend and 20 end-to-end tests, ten of them automated accessibility checks (axe, WCAG 2.1 AA). GitHub Actions runs the backend and frontend tests on every push and pull request. Results and screenshots are in [tests.md](tests.md).
 
 ## Documentation
 
@@ -139,13 +140,15 @@ npm run lint
 - [API reference](docs/api.md)
 - [Dashboard and charts](docs/dashboard.md)
 - [Privacy (GDPR)](docs/privacy.md)
+- [Testing guide](docs/testing.md): running, writing and debugging tests, CI
 
 ## Known limitations
 
 - There is no e-mail service: accounts come from the seed data, users cannot be invited by e-mail.
 - Demo accounts have fixed, well-known passwords. They are only created in the `Development` environment, so never run a production deployment as `Development`.
 - Demo data and all year filters are limited to 2026.
-- No CI pipeline and no end-to-end tests in a browser.
+- The browser tests (Playwright) run locally only: they need SQL Server LocalDB and are not part of the CI pipeline yet.
+- Accessibility is only checked automatically (axe). Keyboard and screen reader use have not been tested by hand.
 
 ## Contributing
 

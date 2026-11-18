@@ -42,3 +42,7 @@ docs/DASHBOARD_PROMPT.md
 # Testlaeufe
 coverage/
 TestResults/
+
+# Playwright
+playwright-report/
+test-results/

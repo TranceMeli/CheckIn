@@ -79,15 +79,15 @@ function ExportTable() {
         <div className="export-table">
             <h2>Export</h2>
             <div className="filter-row">
-                <select name="monat" value={filter.monat} onChange={handleFilter}>
+                <select name="monat" value={filter.monat} onChange={handleFilter} aria-label="Monat">
                     {MONATE.map((m, i) => (
                         <option key={i + 1} value={i + 1}>{m}</option>
                     ))}
                 </select>
-                <select name="jahr" value={filter.jahr} onChange={handleFilter}>
+                <select name="jahr" value={filter.jahr} onChange={handleFilter} aria-label="Jahr">
                     {JAHRE.map(j => <option key={j} value={j}>{j}</option>)}
                 </select>
-                <select name="abteilung" value={filter.abteilung} onChange={handleFilter}>
+                <select name="abteilung" value={filter.abteilung} onChange={handleFilter} aria-label="Abteilung">
                     <option value="">Alle Abteilungen</option>
                     {abteilungen.map(a => <option key={a} value={a}>{a}</option>)}
                 </select>
@@ -103,7 +103,7 @@ function ExportTable() {
             ) : data.length === 0 ? (
                 <p>Keine Einträge für diesen Zeitraum</p>
             ) : (
-                <div className="table-scroll">
+                <div className="table-scroll" role="region" aria-label="Anwesenheitstabelle, horizontal scrollbar" tabIndex={0}>
                 <table className="export-table__table">
                     <thead>
                         <tr>{SPALTEN.map(s => <th key={s}>{s}</th>)}</tr>

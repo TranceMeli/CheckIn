@@ -63,7 +63,7 @@
 }
 
 .nav-top a:hover { background: hsl(0 0% 100% / 0.1); color: #fff; }
-.nav-top a.active { background: hsl(174 84% 32%); color: #fff; }
+.nav-top a.active { background: var(--primary); color: #fff; }
 
 .nav-tab { grid-area: tab; display: none; }
 
@@ -262,7 +262,7 @@
 }
 
 .stats-card-label {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.0375rem;
@@ -332,7 +332,7 @@
 .badge--homeoffice  { background: #FEF3C7; color: #78350F; }
 .badge--abwesend    { background: #FEE2E2; color: #7F1D1D; }
 .badge--admin       { background: #E0F2FE; color: #075985; }
-.badge--mitarbeiter { background: #F0FDFB; color: #0D9488; border: 1px solid #99F6E4; }
+.badge--mitarbeiter { background: #F0FDFB; color: #0F766E; border: 1px solid #99F6E4; }
 
 /* RESPONSIVE */
 /* Tablet/Handy: Navigation wandert als Tab-Leiste an den unteren Rand */

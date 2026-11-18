@@ -58,8 +58,8 @@ const waehleMitarbeiter = async (id = 'u1') => {
   await userEvent.selectOptions(screen.getByRole('combobox'), id)
 }
 
-describe('Verwalten: Mitarbeiterauswahl', () => {
-  it('lädt nur Mitarbeiter (nicht die Liste mit Admins)', async () => {
+describe('Manage page: employee selection', () => {
+  it('loads only employees (not the list with admins)', async () => {
     render(<AdminManage />)
 
     await screen.findByRole('option', { name: 'Anna Adler' })
@@ -69,7 +69,7 @@ describe('Verwalten: Mitarbeiterauswahl', () => {
     expect(screen.queryByRole('option', { name: /Mustermann/ })).toBeNull()
   })
 
-  it('gruppiert die Mitarbeiter nach Abteilung', async () => {
+  it('groups the employees by department', async () => {
     render(<AdminManage />)
 
     await screen.findByRole('option', { name: 'Anna Adler' })
@@ -79,7 +79,7 @@ describe('Verwalten: Mitarbeiterauswahl', () => {
     expect(within(gruppen[1]).getAllByRole('option')).toHaveLength(2)
   })
 
-  it('schlägt als Datum heute vor und sperrt die Zukunft', async () => {
+  it('suggests today as the date and blocks the future', async () => {
     render(<AdminManage />)
 
     const datum = await screen.findByLabelText('Datum')
@@ -89,21 +89,21 @@ describe('Verwalten: Mitarbeiterauswahl', () => {
     expect(datum).toHaveAttribute('min', '2026-01-01')
   })
 
-  it('deaktiviert den Speichern-Button, bis jemand gewählt ist', async () => {
+  it('disables the save button until someone is chosen', async () => {
     render(<AdminManage />)
 
     expect(await screen.findByRole('button', { name: 'Nachtragen' })).toBeDisabled()
   })
 })
 
-describe('Verwalten: Einträge des Monats', () => {
-  it('zeigt vor der Auswahl einen Hinweis statt einer Liste', async () => {
+describe('Manage page: entries of the month', () => {
+  it('shows a hint instead of a list before a selection', async () => {
     render(<AdminManage />)
 
     expect(await screen.findByText(/Wähle einen Mitarbeiter/)).toBeInTheDocument()
   })
 
-  it('lädt nach der Auswahl die Einträge des Monats', async () => {
+  it('loads the entries of the month after a selection', async () => {
     render(<AdminManage />)
 
     await waehleMitarbeiter('u1')
@@ -115,7 +115,7 @@ describe('Verwalten: Einträge des Monats', () => {
     expect(screen.getByText('Mi., 04.11.')).toBeInTheDocument()
   })
 
-  it('zeigt einen Leerzustand, wenn es im Monat keine Einträge gibt', async () => {
+  it('shows an empty state when the month has no entries', async () => {
     eintraege = []
     render(<AdminManage />)
 
@@ -124,7 +124,7 @@ describe('Verwalten: Einträge des Monats', () => {
     expect(await screen.findByText('Keine Einträge in diesem Monat.')).toBeInTheDocument()
   })
 
-  it('übernimmt Datum und Status per "Bearbeiten" ins Formular', async () => {
+  it('copies date and status into the form via "Bearbeiten"', async () => {
     render(<AdminManage />)
     await waehleMitarbeiter('u1')
     const zeile = (await screen.findByText('Mi., 04.11.')).closest('li')
@@ -136,8 +136,8 @@ describe('Verwalten: Einträge des Monats', () => {
   })
 })
 
-describe('Verwalten: nachtragen und korrigieren', () => {
-  it('weist auf einen vorhandenen Eintrag hin und bietet "Eintrag ändern" an', async () => {
+describe('Manage page: add and correct', () => {
+  it('points out an existing entry and offers "Eintrag ändern"', async () => {
     render(<AdminManage />)
 
     await waehleMitarbeiter('u1') // heute (05.11.) hat schon "Home Office"
@@ -147,7 +147,7 @@ describe('Verwalten: nachtragen und korrigieren', () => {
     expect(screen.queryByRole('button', { name: 'Nachtragen' })).toBeNull()
   })
 
-  it('bietet "Nachtragen" an, wenn für den Tag noch nichts existiert', async () => {
+  it('offers "Nachtragen" when nothing exists for the day', async () => {
     eintraege = [{ datum: '2026-11-04', status: 'Office' }]
     render(<AdminManage />)
 
@@ -157,7 +157,7 @@ describe('Verwalten: nachtragen und korrigieren', () => {
     expect(screen.queryByRole('status')).toBeNull()
   })
 
-  it('sendet beim Nachtragen ein POST mit Status und Datum', async () => {
+  it('sends a POST with status and date when adding', async () => {
     eintraege = []
     api.mockResolvedValue({ data: { gespeichert: true } })
     render(<AdminManage />)
@@ -174,7 +174,7 @@ describe('Verwalten: nachtragen und korrigieren', () => {
     expect(toast.success).toHaveBeenCalledWith('Check-in nachgetragen.')
   })
 
-  it('sendet beim Korrigieren ein PUT', async () => {
+  it('sends a PUT when correcting', async () => {
     api.mockResolvedValue({ data: { gespeichert: true } })
     render(<AdminManage />)
     await waehleMitarbeiter('u1') // vorhanden: Home Office
@@ -190,7 +190,7 @@ describe('Verwalten: nachtragen und korrigieren', () => {
     expect(toast.success).toHaveBeenCalledWith('Eintrag geändert.')
   })
 
-  it('lässt "Eintrag ändern" gesperrt, solange der Status unverändert ist', async () => {
+  it('keeps "Eintrag ändern" disabled while the status is unchanged', async () => {
     render(<AdminManage />)
     await waehleMitarbeiter('u1') // vorhanden: Home Office, vorbelegt ist Office
 
@@ -199,7 +199,7 @@ describe('Verwalten: nachtragen und korrigieren', () => {
     expect(await screen.findByRole('button', { name: 'Eintrag ändern' })).toBeDisabled()
   })
 
-  it('zeigt bei einem 409 den bestehenden Status, statt zu überschreiben', async () => {
+  it('shows the existing status on a 409 instead of overwriting', async () => {
     eintraege = []
     api.mockRejectedValue({ response: { status: 409, data: { bestehenderStatus: 'Office' } } })
     render(<AdminManage />)
@@ -211,7 +211,7 @@ describe('Verwalten: nachtragen und korrigieren', () => {
     expect(toast.error).not.toHaveBeenCalled()
   })
 
-  it('meldet ein Zukunftsdatum (400) verständlich', async () => {
+  it('reports a future date (400) in plain words', async () => {
     eintraege = []
     api.mockRejectedValue({ response: { status: 400 } })
     render(<AdminManage />)
@@ -222,7 +222,7 @@ describe('Verwalten: nachtragen und korrigieren', () => {
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Für dieses Datum kann nichts nachgetragen werden.'))
   })
 
-  it('meldet andere Fehler allgemein', async () => {
+  it('reports other errors in general terms', async () => {
     eintraege = []
     api.mockRejectedValue({ response: { status: 500 } })
     render(<AdminManage />)
@@ -234,8 +234,8 @@ describe('Verwalten: nachtragen und korrigieren', () => {
   })
 })
 
-describe('Verwalten: "Heute noch nicht eingecheckt"', () => {
-  it('fragt die aktuelle Woche ab (Montag als Startdatum)', async () => {
+describe('Manage page: "Heute noch nicht eingecheckt" (not checked in today)', () => {
+  it('requests the current week (Monday as start date)', async () => {
     render(<AdminManage />)
 
     await screen.findByRole('option', { name: 'Anna Adler' })
@@ -243,7 +243,7 @@ describe('Verwalten: "Heute noch nicht eingecheckt"', () => {
     expect(api.get).toHaveBeenCalledWith('/Dashboard/team-woche', { params: { montag: '2026-11-02' } })
   })
 
-  it('listet nur Personen ohne Eintrag am heutigen Wochentag', async () => {
+  it('lists only people without an entry on today\'s weekday', async () => {
     render(<AdminManage />)
 
     // Donnerstag = Index 3: Lukas fehlt noch, Sarah hat schon eingecheckt
@@ -254,7 +254,7 @@ describe('Verwalten: "Heute noch nicht eingecheckt"', () => {
     expect(screen.getByText('Heute noch nicht eingecheckt').closest('h3')).toHaveTextContent('1')
   })
 
-  it('füllt das Formular per Klick auf den Namen vor', async () => {
+  it('pre-fills the form on a click on the name', async () => {
     render(<AdminManage />)
 
     await userEvent.click(await screen.findByRole('button', { name: /Lukas Müller/ }))
@@ -263,7 +263,7 @@ describe('Verwalten: "Heute noch nicht eingecheckt"', () => {
     expect(screen.getByLabelText('Datum')).toHaveValue(HEUTE)
   })
 
-  it('freut sich, wenn alle eingecheckt haben', async () => {
+  it('celebrates when everybody has checked in', async () => {
     fehlend = fehlend.map(m => ({ ...m, tage: ['Office', 'Office', 'Office', 'Office', null] }))
     render(<AdminManage />)
 

@@ -234,10 +234,12 @@ const STATUS_ZELLE = {
 export function TeamWeekGrid({ data, tage }) {
     if (data.length === 0) return <Leer text="Keine Mitarbeiter in dieser Abteilung" />;
     return (
-        <div className="table-scroll">
-            <div className="week-grid" role="table">
-                <span />
-                {tage.map(t => <span key={t} className="week-grid__head">{t}</span>)}
+        <div className="table-scroll" role="region" aria-label="Wochenraster, horizontal scrollbar" tabIndex={0}>
+            <div className="week-grid" role="table" aria-label="Anwesenheit der Woche">
+                <div className="week-grid__row" role="row">
+                    <span role="columnheader"><span className="sr-only">Mitarbeiter</span></span>
+                    {tage.map(t => <span key={t} role="columnheader" className="week-grid__head">{t}</span>)}
+                </div>
                 {data.map(m => (
                     <WeekRow key={m.userId} m={m} />
                 ))}
@@ -248,17 +250,17 @@ export function TeamWeekGrid({ data, tage }) {
 
 function WeekRow({ m }) {
     return (
-        <>
-            <span className="week-grid__name">{m.name}<small>{m.abteilung}</small></span>
+        <div className="week-grid__row" role="row">
+            <span role="rowheader" className="week-grid__name">{m.name}<small>{m.abteilung}</small></span>
             {m.tage.map((s, i) => {
                 const z = s ? STATUS_ZELLE[s] : null;
                 return (
-                    <div key={i} className={`week-grid__cell week-grid__cell--${z ? z.klasse : "leer"}`}>
+                    <div key={i} role="cell" className={`week-grid__cell week-grid__cell--${z ? z.klasse : "leer"}`}>
                         {z ? z.label : "–"}
                     </div>
                 );
             })}
-        </>
+        </div>
     );
 }
 

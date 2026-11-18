@@ -387,7 +387,7 @@
     display: flex;
     justify-content: space-between;
     margin-top: 0.4rem;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
 }
 
@@ -420,9 +420,12 @@
     min-width: 28rem;
 }
 
+/* Zeilen-Container für die Tabellen-Semantik; das Raster bleibt über die Zellen aufgespannt */
+.week-grid__row { display: contents; }
+
 .week-grid__head { text-align: center; font-size: 0.75rem; color: var(--text-muted); }
 .week-grid__name { font-size: 0.875rem; color: var(--text); }
-.week-grid__name small { display: block; font-size: 0.7rem; color: var(--text-muted); }
+.week-grid__name small { display: block; font-size: 0.75rem; color: var(--text-muted); }
 
 .week-grid__cell {
     height: 2rem;

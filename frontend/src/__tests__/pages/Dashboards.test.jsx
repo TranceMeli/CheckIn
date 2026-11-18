@@ -65,8 +65,8 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-describe('Admin-Dashboard: Laden', () => {
-  it('lädt Übersicht für den aktuellen Monat, Jahresdaten und das Wochenraster', async () => {
+describe('Admin dashboard: loading', () => {
+  it('loads the overview for the current month, the year data and the week grid', async () => {
     render(<AdminPanel />)
 
     await screen.findByText('58 %')
@@ -77,7 +77,7 @@ describe('Admin-Dashboard: Laden', () => {
     expect(letzterAufruf('/Dashboard/team-woche')).toEqual({ montag: '2026-11-02', abteilung: undefined })
   })
 
-  it('zeigt die Kennzahlen als Quoten', async () => {
+  it('shows the key figures as rates', async () => {
     render(<AdminPanel />)
 
     expect(await screen.findByText('58 %')).toBeInTheDocument()   // Office 98 / 168
@@ -86,7 +86,7 @@ describe('Admin-Dashboard: Laden', () => {
     expect(screen.getByText('168')).toBeInTheDocument()
   })
 
-  it('reicht die geladenen Daten an die Diagramme weiter', async () => {
+  it('passes the loaded data on to the charts', async () => {
     render(<AdminPanel />)
 
     await screen.findByText('58 %')
@@ -100,7 +100,7 @@ describe('Admin-Dashboard: Laden', () => {
     expect(screen.getByTestId('teamgrid')).toHaveTextContent('3|Mo 02.,Di 03.,Mi 04.,Do 05.,Fr 06.')
   })
 
-  it('zeigt eine Fehlermeldung, wenn die Auswertung nicht lädt', async () => {
+  it('shows an error when the analysis fails to load', async () => {
     api.get.mockImplementation(async (url) => {
       if (url === '/Dashboard/overview') throw new Error('Serverfehler')
       return { data: [] }
@@ -111,8 +111,8 @@ describe('Admin-Dashboard: Laden', () => {
   })
 })
 
-describe('Admin-Dashboard: Zeitraum', () => {
-  it('wechselt auf die Woche (Montag bis Sonntag)', async () => {
+describe('Admin dashboard: period', () => {
+  it('switches to the week (Monday to Sunday)', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -122,7 +122,7 @@ describe('Admin-Dashboard: Zeitraum', () => {
     expect(within(screen.getByLabelText('Zeitraum wechseln')).getByText('KW 45 · 02.11. – 08.11.')).toBeInTheDocument()
   })
 
-  it('wechselt auf das Quartal', async () => {
+  it('switches to the quarter', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -132,7 +132,7 @@ describe('Admin-Dashboard: Zeitraum', () => {
     expect(within(screen.getByLabelText('Zeitraum wechseln')).getByText('Q4 2026')).toBeInTheDocument()
   })
 
-  it('wechselt auf das ganze Jahr und sperrt die Pfeile', async () => {
+  it('switches to the whole year and disables the arrows', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -143,7 +143,7 @@ describe('Admin-Dashboard: Zeitraum', () => {
     expect(screen.getByRole('button', { name: 'Nächster Zeitraum' })).toBeDisabled()
   })
 
-  it('blättert einen Monat zurück', async () => {
+  it('pages one month back', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -153,7 +153,7 @@ describe('Admin-Dashboard: Zeitraum', () => {
     expect(within(screen.getByLabelText('Zeitraum wechseln')).getByText('Oktober 2026')).toBeInTheDocument()
   })
 
-  it('blättert das Wochenraster unabhängig vom Zeitraum', async () => {
+  it('pages the week grid independently of the period', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -165,8 +165,8 @@ describe('Admin-Dashboard: Zeitraum', () => {
   })
 })
 
-describe('Admin-Dashboard: Filter', () => {
-  it('bietet nur vorhandene Abteilungen an, sortiert', async () => {
+describe('Admin dashboard: filters', () => {
+  it('offers only existing departments, sorted', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -176,7 +176,7 @@ describe('Admin-Dashboard: Filter', () => {
       .toEqual(['Alle Abteilungen', 'Administration', 'Softwareentwicklung'])
   })
 
-  it('filtert nach Abteilung und begrenzt die Mitarbeiterliste darauf', async () => {
+  it('filters by department and limits the employee list to it', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -188,7 +188,7 @@ describe('Admin-Dashboard: Filter', () => {
     expect(within(screen.getByLabelText('Mitarbeiter')).getAllByRole('option')).toHaveLength(3) // Alle + 2
   })
 
-  it('filtert nach Mitarbeiter', async () => {
+  it('filters by employee', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
 
@@ -197,7 +197,7 @@ describe('Admin-Dashboard: Filter', () => {
     await waitFor(() => expect(letzterAufruf('/Dashboard/overview').userId).toBe('u2'))
   })
 
-  it('setzt den Mitarbeiter zurück, wenn die Abteilung wechselt', async () => {
+  it('resets the employee when the department changes', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
     await userEvent.selectOptions(screen.getByLabelText('Mitarbeiter'), 'u2')
@@ -208,7 +208,7 @@ describe('Admin-Dashboard: Filter', () => {
     await waitFor(() => expect(letzterAufruf('/Dashboard/overview').userId).toBeUndefined())
   })
 
-  it('"Zurücksetzen" stellt Filter, Zeitraum und Woche wieder her', async () => {
+  it('"Zurücksetzen" restores filters, period and week', async () => {
     render(<AdminPanel />)
     await screen.findByText('58 %')
     await userEvent.selectOptions(screen.getByLabelText('Abteilung'), 'Administration')
@@ -224,8 +224,8 @@ describe('Admin-Dashboard: Filter', () => {
   })
 })
 
-describe('Mitarbeiter-Statistik', () => {
-  it('lädt nur die eigenen Endpunkte, nie die Admin-Daten', async () => {
+describe('Employee statistics', () => {
+  it('loads only its own endpoints, never the admin data', async () => {
     render(<UserView />)
 
     await screen.findByText('Meine Statistik')
@@ -238,7 +238,7 @@ describe('Mitarbeiter-Statistik', () => {
     expect(api.get.mock.calls.some(([url]) => url.startsWith('/User'))).toBe(false)
   })
 
-  it('zeigt die Kennzahlen als Tage', async () => {
+  it('shows the key figures as days', async () => {
     render(<UserView />)
 
     expect(await screen.findByText('98')).toBeInTheDocument()
@@ -248,7 +248,7 @@ describe('Mitarbeiter-Statistik', () => {
     expect(screen.getByText('168')).toBeInTheDocument()
   })
 
-  it('zeigt Ziel-Meter, Ring, Wochentage, Verlauf und Heatmap', async () => {
+  it('shows target meter, donut, weekdays, trend and heatmap', async () => {
     render(<UserView />)
 
     await screen.findByText('98')
@@ -260,7 +260,7 @@ describe('Mitarbeiter-Statistik', () => {
     expect(screen.getByTestId('heatmap')).toHaveTextContent('52')
   })
 
-  it('zeigt keine Admin-Elemente (Abteilungsvergleich, Rangliste, Filter)', async () => {
+  it('shows no admin elements (department comparison, ranking, filters)', async () => {
     render(<UserView />)
 
     await screen.findByText('98')
@@ -271,7 +271,7 @@ describe('Mitarbeiter-Statistik', () => {
     expect(screen.queryByLabelText('Abteilung')).toBeNull()
   })
 
-  it('lädt beim Zeitraumwechsel neu', async () => {
+  it('reloads when the period changes', async () => {
     render(<UserView />)
     await screen.findByText('98')
 
@@ -280,7 +280,7 @@ describe('Mitarbeiter-Statistik', () => {
     await waitFor(() => expect(letzterAufruf('/CheckIn/dashboard/overview')).toEqual({ von: '2026-10-01', bis: '2026-12-31' }))
   })
 
-  it('zeigt eine Fehlermeldung, wenn die Statistik nicht lädt', async () => {
+  it('shows an error when the statistics fail to load', async () => {
     api.get.mockRejectedValue(new Error('Serverfehler'))
     render(<UserView />)
 

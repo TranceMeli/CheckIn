@@ -5,40 +5,40 @@ import {
   WeekdayChart, DepartmentShareChart, AbsenceChart, StatusDonut,
 } from '../../components/DashboardCharts'
 
-describe('TargetMeter (Ziel-Quote)', () => {
-  it('zeigt die Quote und sagt, wie weit das Ziel entfernt ist', () => {
+describe('TargetMeter (target rate)', () => {
+  it('shows the rate and how far the target is away', () => {
     render(<TargetMeter office={58} total={100} />)
 
     expect(screen.getByText(/58 %/)).toBeInTheDocument()
     expect(screen.getByText('2 Prozentpunkte unter dem Ziel.')).toBeInTheDocument()
   })
 
-  it('meldet erreichtes Ziel', () => {
+  it('reports a reached target', () => {
     render(<TargetMeter office={60} total={100} />)
 
     expect(screen.getByText('Das Ziel ist erreicht.')).toBeInTheDocument()
   })
 
-  it('meldet auch übererfülltes Ziel als erreicht', () => {
+  it('also reports an exceeded target as reached', () => {
     render(<TargetMeter office={9} total={10} />)
 
     expect(screen.getByText('Das Ziel ist erreicht.')).toBeInTheDocument()
   })
 
-  it('sagt ehrlich, wenn nichts erfasst wurde', () => {
+  it('says so when nothing was recorded', () => {
     render(<TargetMeter office={0} total={0} />)
 
     expect(screen.getByText('Keine Check-ins im Zeitraum.')).toBeInTheDocument()
     expect(screen.queryByText(/Prozentpunkte/)).toBeNull()
   })
 
-  it('beschreibt den Balken für Screenreader', () => {
+  it('describes the bar for screen readers', () => {
     render(<TargetMeter office={58} total={100} />)
 
     expect(screen.getByRole('img', { name: 'Office-Quote 58 Prozent, Ziel 60 Prozent' })).toBeInTheDocument()
   })
 
-  it('begrenzt die Balkenbreite auf die Quote', () => {
+  it('limits the bar width to the rate', () => {
     const { container } = render(<TargetMeter office={25} total={100} />)
 
     expect(container.querySelector('.meter i').style.width).toBe('25%')
@@ -52,7 +52,7 @@ describe('OfficeRanking', () => {
     { userId: 'b', name: 'Ben Berg', abteilung: 'Beta', office: 5 },
   ]
 
-  it('listet die Personen mit Position, Abteilung und Tagen', () => {
+  it('lists people with rank, department and days', () => {
     render(<OfficeRanking data={daten} />)
 
     const items = screen.getAllByRole('listitem')
@@ -64,7 +64,7 @@ describe('OfficeRanking', () => {
     expect(within(items[1]).getByText('2.')).toBeInTheDocument()
   })
 
-  it('skaliert die Balken relativ zum Spitzenreiter', () => {
+  it('scales the bars relative to the leader', () => {
     const { container } = render(<OfficeRanking data={daten} />)
 
     const balken = container.querySelectorAll('.ranking__bar i')
@@ -72,20 +72,20 @@ describe('OfficeRanking', () => {
     expect(balken[1].style.width).toBe('50%')
   })
 
-  it('zeigt einen Leerzustand ohne Daten', () => {
+  it('shows an empty state without data', () => {
     render(<OfficeRanking data={[]} />)
 
     expect(screen.getByText('Keine Daten für diesen Zeitraum')).toBeInTheDocument()
   })
 })
 
-describe('TeamWeekGrid (Wochenraster)', () => {
+describe('TeamWeekGrid (week grid)', () => {
   const tage = ['Mo 02.', 'Di 03.', 'Mi 04.', 'Do 05.', 'Fr 06.']
   const daten = [
     { userId: 'a', name: 'Anna Adler', abteilung: 'Alpha', tage: ['Office', 'HomeOffice', 'Abwesend', null, null] },
   ]
 
-  it('zeigt Wochentage, Namen und Abteilung', () => {
+  it('shows weekdays, names and department', () => {
     render(<TeamWeekGrid data={daten} tage={tage} />)
 
     tage.forEach(t => expect(screen.getByText(t)).toBeInTheDocument())
@@ -93,7 +93,7 @@ describe('TeamWeekGrid (Wochenraster)', () => {
     expect(screen.getByText('Alpha')).toBeInTheDocument()
   })
 
-  it('übersetzt die Status in kurze Beschriftungen und markiert fehlende Tage', () => {
+  it('translates statuses into short labels and marks missing days', () => {
     render(<TeamWeekGrid data={daten} tage={tage} />)
 
     expect(screen.getByText('Office')).toBeInTheDocument()
@@ -102,7 +102,7 @@ describe('TeamWeekGrid (Wochenraster)', () => {
     expect(screen.getAllByText('–')).toHaveLength(2)
   })
 
-  it('färbt die Zellen je Status', () => {
+  it('colours the cells by status', () => {
     const { container } = render(<TeamWeekGrid data={daten} tage={tage} />)
 
     expect(container.querySelector('.week-grid__cell--office')).toHaveTextContent('Office')
@@ -111,7 +111,7 @@ describe('TeamWeekGrid (Wochenraster)', () => {
     expect(container.querySelectorAll('.week-grid__cell--leer')).toHaveLength(2)
   })
 
-  it('zeigt einen Leerzustand ohne Mitarbeiter', () => {
+  it('shows an empty state without employees', () => {
     render(<TeamWeekGrid data={[]} tage={tage} />)
 
     expect(screen.getByText('Keine Mitarbeiter in dieser Abteilung')).toBeInTheDocument()
@@ -123,26 +123,26 @@ describe('YearHeatmap', () => {
   wochen[0] = { woche: 1, total: 4, office: 2 }
   wochen[44] = { woche: 45, total: 8, office: 8 }
 
-  it('zeichnet eine Zelle pro Kalenderwoche', () => {
+  it('draws one cell per calendar week', () => {
     const { container } = render(<YearHeatmap data={wochen} />)
 
     expect(container.querySelectorAll('.heatmap i')).toHaveLength(52)
   })
 
-  it('nennt den Office-Anteil im Tooltip jeder Zelle', () => {
+  it('names the office share in each cell\'s tooltip', () => {
     const { container } = render(<YearHeatmap data={wochen} />)
 
     expect(container.querySelector('[title="KW 1: 50 % Office"]')).not.toBeNull()
     expect(container.querySelector('[title="KW 45: 100 % Office"]')).not.toBeNull()
   })
 
-  it('kennzeichnet Wochen ohne Daten', () => {
+  it('marks weeks without data', () => {
     const { container } = render(<YearHeatmap data={wochen} />)
 
     expect(container.querySelector('[title="KW 2: keine Daten"]')).not.toBeNull()
   })
 
-  it('färbt Wochen mit mehr Office dunkler als Wochen mit weniger', () => {
+  it('colours weeks with more office darker than weeks with less', () => {
     const { container } = render(<YearHeatmap data={wochen} />)
 
     // jsdom rechnet hsl() teils in rgb() um: je dunkler die Zelle, desto kleiner die Helligkeit
@@ -155,7 +155,7 @@ describe('YearHeatmap', () => {
     expect(helligkeit('KW 45: 100 % Office')).toBeLessThan(helligkeit('KW 1: 50 % Office'))
   })
 
-  it('beschreibt die Grafik für Screenreader und zeigt die Legende', () => {
+  it('describes the chart for screen readers and shows the legend', () => {
     render(<YearHeatmap data={wochen} />)
 
     expect(screen.getByRole('img', { name: /Office-Anteil pro Kalenderwoche/ })).toBeInTheDocument()
@@ -164,28 +164,28 @@ describe('YearHeatmap', () => {
   })
 })
 
-describe('Leerzustände der Diagramme', () => {
+describe('Empty states of the charts', () => {
   const leer = { label: 'Mo', office: 0, homeOffice: 0, abwesend: 0, total: 0 }
 
-  it('WeekdayChart ohne Daten', () => {
+  it('WeekdayChart without data', () => {
     render(<WeekdayChart data={[leer, leer]} />)
 
     expect(screen.getByText('Keine Daten für diesen Zeitraum')).toBeInTheDocument()
   })
 
-  it('DepartmentShareChart ohne Abteilungen', () => {
+  it('DepartmentShareChart without departments', () => {
     render(<DepartmentShareChart data={[]} />)
 
     expect(screen.getByText('Keine Daten für diesen Zeitraum')).toBeInTheDocument()
   })
 
-  it('AbsenceChart ohne Abwesenheiten', () => {
+  it('AbsenceChart without absences', () => {
     render(<AbsenceChart data={[{ ...leer, label: 'Alpha' }]} />)
 
     expect(screen.getByText('Keine Abwesenheiten im Zeitraum')).toBeInTheDocument()
   })
 
-  it('StatusDonut ohne Einträge', () => {
+  it('StatusDonut without entries', () => {
     render(<StatusDonut data={{ office: 0, homeOffice: 0, abwesend: 0 }} />)
 
     expect(screen.getByText('Keine Daten für diesen Zeitraum')).toBeInTheDocument()

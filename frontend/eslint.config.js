@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'coverage']),
+  globalIgnores(['dist', 'coverage', 'playwright-report', 'test-results']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -25,5 +25,15 @@ export default defineConfig([
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
+  },
+  {
+    // Konfiguration und E2E-Tests laufen in Node, nicht im Browser.
+    files: ['playwright.config.js', 'e2e/**/*.js'],
+    languageOptions: { globals: globals.node },
+  },
+  {
+    // Provider und Hook liegen bewusst in einer Datei; die Regel betrifft nur Fast Refresh im Dev-Server.
+    files: ['src/contexts/AuthContext.jsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
 ])

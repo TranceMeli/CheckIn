@@ -87,7 +87,7 @@
 .missing-list button:hover { border-color: hsl(174 60% 55%); background: hsl(174 80% 97%); }
 
 .missing-list { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.missing-list small { display: block; font-size: 0.7rem; color: var(--text-muted); }
+.missing-list small { display: block; font-size: 0.75rem; color: var(--text-muted); }
 
 @media (max-width: 900px) {
     .manage__grid { grid-template-columns: minmax(0, 1fr); }

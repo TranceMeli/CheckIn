@@ -20,7 +20,7 @@ beforeEach(() => {
 })
 
 describe('Impressum', () => {
-  it('zeigt die Pflichtangaben', () => {
+  it('shows the mandatory details', () => {
     inRouter(<Impressum />)
 
     expect(screen.getByRole('heading', { level: 1, name: 'Impressum' })).toBeInTheDocument()
@@ -29,20 +29,20 @@ describe('Impressum', () => {
     expect(screen.getByText(/Umsatzsteuer-Identifikationsnummer/)).toBeInTheDocument()
   })
 
-  it('nennt überall denselben Namen wie das Admin-Konto (Max Mustermann)', () => {
+  it('uses the same name everywhere as the admin account (Max Mustermann)', () => {
     inRouter(<Impressum />)
 
     expect(screen.getAllByText(/Max Mustermann/).length).toBeGreaterThanOrEqual(2)
     expect(screen.queryByText(/Erika/)).toBeNull()
   })
 
-  it('kennzeichnet alle Angaben als fiktiv', () => {
+  it('marks all details as fictional', () => {
     inRouter(<Impressum />)
 
     expect(screen.getByText(/fiktives Demoprojekt/, { selector: '.legal-note' })).toBeInTheDocument()
   })
 
-  it('führt zurück zur Anmeldung und enthält den Footer', () => {
+  it('links back to the login and contains the footer', () => {
     inRouter(<Impressum />)
 
     expect(screen.getByRole('link', { name: /Zurück zur Anmeldung/ })).toHaveAttribute('href', '/login')
@@ -50,8 +50,8 @@ describe('Impressum', () => {
   })
 })
 
-describe('Datenschutzerklärung', () => {
-  it('enthält die DSGVO-Pflichtabschnitte', () => {
+describe('Privacy policy', () => {
+  it('contains the mandatory GDPR sections', () => {
     inRouter(<Datenschutz />)
 
     const ueberschriften = screen.getAllByRole('heading', { level: 2 }).map(h => h.textContent)
@@ -65,7 +65,7 @@ describe('Datenschutzerklärung', () => {
     ]))
   })
 
-  it('nennt Speicherdauern in einer Tabelle', () => {
+  it('lists retention periods in a table', () => {
     inRouter(<Datenschutz />)
 
     expect(screen.getByRole('columnheader', { name: 'Speicherdauer' })).toBeInTheDocument()
@@ -73,7 +73,7 @@ describe('Datenschutzerklärung', () => {
     expect(screen.getByText(/Maximal 7 Tage/)).toBeInTheDocument()
   })
 
-  it('nennt die Betroffenenrechte und das Beschwerderecht', () => {
+  it('names the data subject rights and the right to complain', () => {
     inRouter(<Datenschutz />)
 
     expect(screen.getByText(/Auskunft über Ihre gespeicherten Daten \(Art\. 15\)/)).toBeInTheDocument()
@@ -81,22 +81,22 @@ describe('Datenschutzerklärung', () => {
     expect(screen.getByText(/Art\. 77 DSGVO/)).toBeInTheDocument()
   })
 
-  it('erklärt, dass nur ein technisch notwendiges Cookie genutzt wird', () => {
+  it('explains that only one technically necessary cookie is used', () => {
     inRouter(<Datenschutz />)
 
     expect(screen.getByText(/ausschließlich ein technisch notwendiges Cookie/)).toBeInTheDocument()
     expect(screen.getByText(/kein Cookie-Banner/)).toBeInTheDocument()
   })
 
-  it('kennzeichnet den Text als fiktiv', () => {
+  it('marks the text as fictional', () => {
     inRouter(<Datenschutz />)
 
     expect(screen.getByText(/fiktives Demoprojekt/, { selector: '.legal-note' })).toBeInTheDocument()
   })
 })
 
-describe('Dashboard-Weiche', () => {
-  it('zeigt Mitarbeitern ihre eigene Statistik', () => {
+describe('Dashboard switch (by role)', () => {
+  it('shows employees their own statistics', () => {
     useAuth.mockReturnValue({ user: { role: 'Mitarbeiter' } })
     render(<Dashboard />)
 
@@ -104,7 +104,7 @@ describe('Dashboard-Weiche', () => {
     expect(screen.queryByText('Admin-Auswertungen')).toBeNull()
   })
 
-  it('zeigt Admins die Gesamt-Auswertung', () => {
+  it('shows admins the overall analysis', () => {
     useAuth.mockReturnValue({ user: { role: 'Admin' } })
     render(<Dashboard />)
 
@@ -112,7 +112,7 @@ describe('Dashboard-Weiche', () => {
     expect(screen.queryByText('Mitarbeiter-Statistik')).toBeNull()
   })
 
-  it('zeigt ohne Rolle nichts an', () => {
+  it('shows nothing without a role', () => {
     useAuth.mockReturnValue({ user: null })
     const { container } = render(<Dashboard />)
 
@@ -134,7 +134,7 @@ describe('Login', () => {
     return login
   }
 
-  it('zeigt Formular und Footer mit den Rechtsseiten', () => {
+  it('shows the form and the footer with the legal pages', () => {
     renderLogin()
 
     expect(screen.getByRole('heading', { name: /Willkommen bei CheckIn/ })).toBeInTheDocument()
@@ -144,7 +144,7 @@ describe('Login', () => {
     expect(screen.getByRole('link', { name: 'Datenschutz' })).toBeInTheDocument()
   })
 
-  it('meldet an, übergibt den Token und leitet auf das Dashboard', async () => {
+  it('signs in, hands over the token and redirects to the dashboard', async () => {
     const post = vi.spyOn(axios, 'post').mockResolvedValue({ data: { accessToken: 'tok', roles: ['Admin'] } })
     const login = renderLogin()
 
@@ -161,7 +161,7 @@ describe('Login', () => {
     expect(login).toHaveBeenCalledWith('tok', ['Admin'])
   })
 
-  it('bleibt bei falschen Zugangsdaten auf der Login-Seite', async () => {
+  it('stays on the login page with wrong credentials', async () => {
     vi.spyOn(axios, 'post').mockRejectedValue({ response: { status: 400 } })
     const login = renderLogin()
 

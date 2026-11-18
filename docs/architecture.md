@@ -73,9 +73,12 @@ CheckIn/
 │   │   └── UserService.cs
 │   └── Program.cs
 ├── docs/                 documentation and screenshots
+├── .github/workflows/    CI (backend, frontend, dependency scan)
 ├── CONTRIBUTING.md
 ├── tests.md              test overview and results
 └── frontend/
+    ├── e2e/                  Playwright tests (flows and axe accessibility checks)
+    ├── playwright.config.js
     ├── src/
     │   ├── __tests__/        Vitest tests (api, components, pages, routes, utils)
     │   ├── api/

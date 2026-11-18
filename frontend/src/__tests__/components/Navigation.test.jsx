@@ -21,46 +21,46 @@ describe('Navbar', () => {
     return render(<MemoryRouter initialEntries={[route]}><Navbar {...props} /></MemoryRouter>)
   }
 
-  it('zeigt Admins Auswertungen, Verwalten und Export', () => {
+  it('shows admins Dashboard, Manage and Export', () => {
     renderNav(admin)
 
     expect(screen.getAllByRole('link').map(l => l.textContent)).toEqual(['Auswertungen', 'Verwalten', 'Export'])
   })
 
-  it('zeigt Mitarbeitern Check-in und Auswertungen', () => {
+  it('shows employees Check-in and Dashboard', () => {
     renderNav(mitarbeiter)
 
     expect(screen.getAllByRole('link').map(l => l.textContent)).toEqual(['Check-in', 'Auswertungen'])
   })
 
-  it('zeigt Mitarbeitern keine Admin-Seiten', () => {
+  it('shows employees no admin pages', () => {
     renderNav(mitarbeiter)
 
     expect(screen.queryByRole('link', { name: 'Verwalten' })).toBeNull()
     expect(screen.queryByRole('link', { name: 'Export' })).toBeNull()
   })
 
-  it('zeigt ohne Anmeldung keine Links', () => {
+  it('shows no links when signed out', () => {
     renderNav(null)
 
     expect(screen.queryAllByRole('link')).toHaveLength(0)
   })
 
-  it('verlinkt auf die richtigen Pfade', () => {
+  it('links to the right paths', () => {
     renderNav(admin)
 
     expect(screen.getByRole('link', { name: 'Verwalten' })).toHaveAttribute('href', '/manage')
     expect(screen.getByRole('link', { name: 'Export' })).toHaveAttribute('href', '/list')
   })
 
-  it('markiert die aktuelle Seite als aktiv', () => {
+  it('marks the current page as active', () => {
     renderNav(admin, {}, '/manage')
 
     expect(screen.getByRole('link', { name: 'Verwalten' })).toHaveClass('active')
     expect(screen.getByRole('link', { name: 'Auswertungen' })).not.toHaveClass('active')
   })
 
-  it('rendert die Top-Leiste und die Tab-Leiste mit eigenen Klassen', () => {
+  it('renders the top bar and the tab bar with their own classes', () => {
     const { container, unmount } = renderNav(admin, { variant: 'top' })
     expect(container.querySelector('nav')).toHaveClass('nav-top')
     unmount()
@@ -70,8 +70,8 @@ describe('Navbar', () => {
   })
 })
 
-describe('UserMenu (Benutzer-Icon)', () => {
-  it('erscheint nicht, wenn niemand angemeldet ist', () => {
+describe('UserMenu (user icon)', () => {
+  it('does not appear when nobody is signed in', () => {
     useAuth.mockReturnValue({ user: null, logout: vi.fn() })
 
     const { container } = render(<UserMenu />)
@@ -79,7 +79,7 @@ describe('UserMenu (Benutzer-Icon)', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('zeigt bei angemeldeten Personen nur das Icon, das Menü ist zu', () => {
+  it('shows only the icon for signed-in people, the menu is closed', () => {
     useAuth.mockReturnValue({ user: admin, logout: vi.fn() })
     render(<UserMenu />)
 
@@ -87,7 +87,7 @@ describe('UserMenu (Benutzer-Icon)', () => {
     expect(screen.queryByRole('menu')).toBeNull()
   })
 
-  it('öffnet das Menü mit E-Mail und Rolle', async () => {
+  it('opens the menu with e-mail and role', async () => {
     useAuth.mockReturnValue({ user: admin, logout: vi.fn() })
     render(<UserMenu />)
 
@@ -99,7 +99,7 @@ describe('UserMenu (Benutzer-Icon)', () => {
     expect(screen.getByRole('button', { name: 'Benutzermenü' })).toHaveAttribute('aria-expanded', 'true')
   })
 
-  it('nennt Mitarbeiter bei ihrer Rolle', async () => {
+  it('names employees by their role', async () => {
     useAuth.mockReturnValue({ user: mitarbeiter, logout: vi.fn() })
     render(<UserMenu />)
 
@@ -108,7 +108,7 @@ describe('UserMenu (Benutzer-Icon)', () => {
     expect(screen.getByText('Mitarbeiter')).toBeInTheDocument()
   })
 
-  it('meldet über "Abmelden" ab', async () => {
+  it('signs out via "Abmelden"', async () => {
     const logout = vi.fn()
     useAuth.mockReturnValue({ user: admin, logout })
     render(<UserMenu />)
@@ -119,7 +119,7 @@ describe('UserMenu (Benutzer-Icon)', () => {
     expect(logout).toHaveBeenCalledTimes(1)
   })
 
-  it('schließt mit Escape', async () => {
+  it('closes with Escape', async () => {
     useAuth.mockReturnValue({ user: admin, logout: vi.fn() })
     render(<UserMenu />)
     await userEvent.click(screen.getByRole('button', { name: 'Benutzermenü' }))
@@ -129,7 +129,7 @@ describe('UserMenu (Benutzer-Icon)', () => {
     expect(screen.queryByRole('menu')).toBeNull()
   })
 
-  it('schließt bei einem Klick außerhalb', async () => {
+  it('closes on a click outside', async () => {
     useAuth.mockReturnValue({ user: admin, logout: vi.fn() })
     render(<div><span>daneben</span><UserMenu /></div>)
     await userEvent.click(screen.getByRole('button', { name: 'Benutzermenü' }))
@@ -139,7 +139,7 @@ describe('UserMenu (Benutzer-Icon)', () => {
     expect(screen.queryByRole('menu')).toBeNull()
   })
 
-  it('schließt beim zweiten Klick auf das Icon', async () => {
+  it('closes on a second click on the icon', async () => {
     useAuth.mockReturnValue({ user: admin, logout: vi.fn() })
     render(<UserMenu />)
     const icon = screen.getByRole('button', { name: 'Benutzermenü' })

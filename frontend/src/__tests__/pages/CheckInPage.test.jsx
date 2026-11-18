@@ -22,8 +22,8 @@ const nochNichtEingecheckt = () => api.get.mockRejectedValue({ response: { statu
 const bereitsEingecheckt = (status = 'HomeOffice') =>
   api.get.mockResolvedValue({ data: { status, alreadyCheckedIn: true } })
 
-describe('Check-in-Seite: Auswahlkarten', () => {
-  it('zeigt die drei Statuskarten', async () => {
+describe('Check-in page: choice cards', () => {
+  it('shows the three status cards', async () => {
     nochNichtEingecheckt()
     render(<CheckInPage />)
 
@@ -33,7 +33,7 @@ describe('Check-in-Seite: Auswahlkarten', () => {
     expect(screen.getAllByRole('radio')).toHaveLength(3)
   })
 
-  it('legt die Karten in ein Raster, das responsiv umbricht', async () => {
+  it('lays the cards out in a grid that wraps responsively', async () => {
     nochNichtEingecheckt()
     const { container } = render(<CheckInPage />)
     await screen.findByText('Office')
@@ -42,7 +42,7 @@ describe('Check-in-Seite: Auswahlkarten', () => {
     expect(container.querySelectorAll('.container .card')).toHaveLength(3)
   })
 
-  it('zeigt vor dem Check-in keinen Hinweis', async () => {
+  it('shows no note before checking in', async () => {
     nochNichtEingecheckt()
     render(<CheckInPage />)
     await screen.findByText('Office')
@@ -50,7 +50,7 @@ describe('Check-in-Seite: Auswahlkarten', () => {
     expect(screen.queryByText(/bereits eingecheckt/)).toBeNull()
   })
 
-  it('zeigt den Einchecken-Button erst bei einer gewählten Karte', async () => {
+  it('shows the check-in button only once a card is chosen', async () => {
     nochNichtEingecheckt()
     render(<CheckInPage />)
     await screen.findByText('Office')
@@ -62,8 +62,8 @@ describe('Check-in-Seite: Auswahlkarten', () => {
   })
 })
 
-describe('Check-in-Seite: Einchecken', () => {
-  it('sendet den gewählten Status und bestätigt', async () => {
+describe('Check-in page: checking in', () => {
+  it('sends the chosen status and confirms', async () => {
     nochNichtEingecheckt()
     api.post.mockResolvedValue({ data: {} })
     render(<CheckInPage />)
@@ -76,7 +76,7 @@ describe('Check-in-Seite: Einchecken', () => {
     expect(toast.success).toHaveBeenCalledWith('Erfolgreich eingecheckt!')
   })
 
-  it('zeigt nach dem Einchecken den Hinweis und sperrt die Auswahl', async () => {
+  it('shows the note after checking in and locks the choice', async () => {
     nochNichtEingecheckt()
     api.post.mockResolvedValue({ data: {} })
     render(<CheckInPage />)
@@ -89,7 +89,7 @@ describe('Check-in-Seite: Einchecken', () => {
     expect(screen.getByRole('button', { name: 'Einchecken' })).toBeDisabled()
   })
 
-  it('meldet einen Fehler beim Speichern und checkt nicht ein', async () => {
+  it('reports an error when saving and does not check in', async () => {
     nochNichtEingecheckt()
     api.post.mockRejectedValue(new Error('Server weg'))
     render(<CheckInPage />)
@@ -103,8 +103,8 @@ describe('Check-in-Seite: Einchecken', () => {
   })
 })
 
-describe('Check-in-Seite: bereits eingecheckt', () => {
-  it('zeigt den großen Hinweis mit Statusmeldung', async () => {
+describe('Check-in page: already checked in', () => {
+  it('shows the large note with the status message', async () => {
     bereitsEingecheckt()
     render(<CheckInPage />)
 
@@ -114,7 +114,7 @@ describe('Check-in-Seite: bereits eingecheckt', () => {
     expect(hinweis).toHaveClass('checkin-note')
   })
 
-  it('wählt den heutigen Status vor und sperrt die anderen Karten', async () => {
+  it('preselects today\'s status and locks the other cards', async () => {
     bereitsEingecheckt('HomeOffice')
     const { container } = render(<CheckInPage />)
     await screen.findByRole('status')
@@ -124,14 +124,14 @@ describe('Check-in-Seite: bereits eingecheckt', () => {
     expect(container.querySelector('.card.active')).toHaveTextContent('Home Office')
   })
 
-  it('sperrt den Einchecken-Button', async () => {
+  it('disables the check-in button', async () => {
     bereitsEingecheckt('Office')
     render(<CheckInPage />)
 
     expect(await screen.findByRole('button', { name: 'Einchecken' })).toBeDisabled()
   })
 
-  it('sendet nichts, wenn trotzdem geklickt wird', async () => {
+  it('sends nothing when clicked anyway', async () => {
     bereitsEingecheckt('Office')
     render(<CheckInPage />)
 
@@ -141,15 +141,15 @@ describe('Check-in-Seite: bereits eingecheckt', () => {
   })
 })
 
-describe('Check-in-Seite: Ladefehler', () => {
-  it('zeigt bei einem Serverfehler eine Meldung', async () => {
+describe('Check-in page: loading errors', () => {
+  it('shows a message on a server error', async () => {
     api.get.mockRejectedValue({ response: { status: 500 } })
     render(<CheckInPage />)
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Fehler beim Laden der Daten'))
   })
 
-  it('behandelt 404 (noch kein Eintrag) nicht als Fehler', async () => {
+  it('does not treat 404 (no entry yet) as an error', async () => {
     nochNichtEingecheckt()
     render(<CheckInPage />)
     await screen.findByText('Office')

@@ -9,14 +9,14 @@ import Button from '../../components/Button'
 import PeriodBar from '../../components/PeriodBar'
 
 describe('StatCard', () => {
-  it('zeigt Beschriftung und Wert', () => {
+  it('shows label and value', () => {
     render(<StatCard label="Office-Quote" value="58 %" />)
 
     expect(screen.getByText('Office-Quote')).toBeInTheDocument()
     expect(screen.getByText('58 %')).toBeInTheDocument()
   })
 
-  it('zeigt das Icon dekorativ (aria-hidden) neben dem Text', () => {
+  it('shows the icon as decoration (aria-hidden) next to the text', () => {
     const { container } = render(
       <StatCard label="Office" value={8} icon={<svg data-testid="icon" />} />,
     )
@@ -25,19 +25,19 @@ describe('StatCard', () => {
     expect(container.querySelector('.stats-card-icon')).toHaveAttribute('aria-hidden', 'true')
   })
 
-  it('rendert ohne Icon keinen leeren Icon-Kreis', () => {
+  it('renders no empty icon circle without an icon', () => {
     const { container } = render(<StatCard label="Gesamt" value={168} />)
 
     expect(container.querySelector('.stats-card-icon')).toBeNull()
   })
 
-  it('übergibt die Kartenfarbe als CSS-Variable', () => {
+  it('passes the card colour as a CSS variable', () => {
     const { container } = render(<StatCard label="Abwesend" value={1} color="#EF4444" />)
 
     expect(container.querySelector('.stats-card').style.getPropertyValue('--card-color')).toBe('#EF4444')
   })
 
-  it('zeigt die Zahl 0 an, statt sie zu verstecken', () => {
+  it('shows the number 0 instead of hiding it', () => {
     render(<StatCard label="Abwesend" value={0} />)
 
     expect(screen.getByText('0')).toBeInTheDocument()
@@ -45,7 +45,7 @@ describe('StatCard', () => {
 })
 
 describe('Karte', () => {
-  it('zeigt Titel, Plakette und Inhalt', () => {
+  it('shows title, badge and content', () => {
     render(<Karte titel="Ziel-Quote" hinweis="November 2026"><p>Inhalt</p></Karte>)
 
     expect(screen.getByRole('heading', { name: /Ziel-Quote/ })).toBeInTheDocument()
@@ -53,13 +53,13 @@ describe('Karte', () => {
     expect(screen.getByText('Inhalt')).toBeInTheDocument()
   })
 
-  it('lässt die Plakette weg, wenn kein Hinweis übergeben wird', () => {
+  it('omits the badge when no hint is passed', () => {
     const { container } = render(<Karte titel="Ohne Hinweis"><span /></Karte>)
 
     expect(container.querySelector('.chart-box__hint')).toBeNull()
   })
 
-  it('hängt zusätzliche Klassen an', () => {
+  it('appends additional classes', () => {
     const { container } = render(<Karte titel="Breit" className="chart-box--full"><span /></Karte>)
 
     expect(container.firstChild).toHaveClass('chart-box', 'chart-box--full')
@@ -67,20 +67,20 @@ describe('Karte', () => {
 })
 
 describe('Footer', () => {
-  it('verlinkt Impressum und Datenschutz', () => {
+  it('links the imprint and the privacy policy', () => {
     render(<MemoryRouter><Footer /></MemoryRouter>)
 
     expect(screen.getByRole('link', { name: 'Impressum' })).toHaveAttribute('href', '/impressum')
     expect(screen.getByRole('link', { name: 'Datenschutz' })).toHaveAttribute('href', '/datenschutz')
   })
 
-  it('kennzeichnet das Projekt als fiktiv', () => {
+  it('marks the project as fictional', () => {
     render(<MemoryRouter><Footer /></MemoryRouter>)
 
     expect(screen.getByText(/fiktives Demoprojekt/)).toBeInTheDocument()
   })
 
-  it('übernimmt eine eigene Klasse für die Login- und Rechtsseiten', () => {
+  it('takes a custom class for the login and legal pages', () => {
     const { container } = render(<MemoryRouter><Footer className="login-footer" /></MemoryRouter>)
 
     expect(container.querySelector('footer')).toHaveClass('login-footer')
@@ -88,7 +88,7 @@ describe('Footer', () => {
 })
 
 describe('Button', () => {
-  it('ruft onClick auf', async () => {
+  it('calls onClick', async () => {
     const onClick = vi.fn()
     render(<Button label="Einchecken" onClick={onClick} />)
 
@@ -97,7 +97,7 @@ describe('Button', () => {
     expect(onClick).toHaveBeenCalledTimes(1)
   })
 
-  it('löst im deaktivierten Zustand nichts aus', async () => {
+  it('does nothing when disabled', async () => {
     const onClick = vi.fn()
     render(<Button label="Einchecken" onClick={onClick} disabled />)
 
@@ -116,7 +116,7 @@ describe('PeriodBar', () => {
     return handlers
   }
 
-  it('zeigt vier Zeiträume und markiert den aktiven', () => {
+  it('shows four periods and marks the active one', () => {
     renderBar()
 
     expect(screen.getAllByRole('button', { pressed: true })).toHaveLength(1)
@@ -125,7 +125,7 @@ describe('PeriodBar', () => {
     expect(screen.getByText('Juni 2026')).toBeInTheDocument()
   })
 
-  it('meldet die Wahl eines anderen Zeitraums', async () => {
+  it('reports the choice of another period', async () => {
     const { onPeriode } = renderBar()
 
     await userEvent.click(screen.getByRole('button', { name: 'Quartal' }))
@@ -133,7 +133,7 @@ describe('PeriodBar', () => {
     expect(onPeriode).toHaveBeenCalledWith('quarter')
   })
 
-  it('schaltet mit den Pfeilen einen Monat vor und zurück', async () => {
+  it('steps one month forward and back with the arrows', async () => {
     const { onAnker } = renderBar()
 
     await userEvent.click(screen.getByRole('button', { name: 'Nächster Zeitraum' }))
@@ -143,7 +143,7 @@ describe('PeriodBar', () => {
     expect(onAnker.mock.calls[1][0]).toEqual(new Date(2026, 4, 1))
   })
 
-  it('sperrt den Zurück-Pfeil im Januar und den Weiter-Pfeil im Dezember', () => {
+  it('disables the back arrow in January and the forward arrow in December', () => {
     const { unmount } = render(
       <PeriodBar periode="month" anker={new Date(2026, 0, 10)} label="Januar 2026" onPeriode={() => {}} onAnker={() => {}} />,
     )
@@ -157,7 +157,7 @@ describe('PeriodBar', () => {
     expect(screen.getByRole('button', { name: 'Nächster Zeitraum' })).toBeDisabled()
   })
 
-  it('sperrt beide Pfeile beim Jahr', () => {
+  it('disables both arrows for the year', () => {
     renderBar({ periode: 'year', label: 'Jahr 2026' })
 
     expect(screen.getByRole('button', { name: 'Voriger Zeitraum' })).toBeDisabled()

@@ -71,6 +71,7 @@ function CheckInPage() {
                                 name="status"
                                 value={opt.value}
                                 checked={isActive}
+                                disabled={isDisabled}
                                 onChange={() => setSelected(opt.value)}
                             />
                             <div className="card-center">

@@ -27,39 +27,39 @@ const renderRoutes = (auth, route, allowedRoles) => {
 }
 
 describe('ProtectedRoute', () => {
-  it('rendert nichts, solange die Sitzung noch wiederhergestellt wird', () => {
+  it('renders nothing while the session is still being restored', () => {
     const { container } = renderRoutes({ user: null, loading: true }, '/privat')
 
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('leitet nicht angemeldete Personen auf /login um', () => {
+  it('redirects people who are not signed in to /login', () => {
     renderRoutes({ user: null, loading: false }, '/privat')
 
     expect(screen.getByText('Login-Seite')).toBeInTheDocument()
     expect(screen.queryByText('Privater Inhalt')).toBeNull()
   })
 
-  it('zeigt angemeldeten Personen den Inhalt', () => {
+  it('shows the content to signed-in people', () => {
     renderRoutes({ user: { role: 'Mitarbeiter' }, loading: false }, '/privat')
 
     expect(screen.getByText('Privater Inhalt')).toBeInTheDocument()
   })
 
-  it('lässt eine erlaubte Rolle durch', () => {
+  it('lets an allowed role through', () => {
     renderRoutes({ user: { role: 'Admin' }, loading: false }, '/manage', ['Admin'])
 
     expect(screen.getByText('Geheime Verwaltung')).toBeInTheDocument()
   })
 
-  it('schickt eine nicht erlaubte Rolle zum Dashboard', () => {
+  it('sends a role that is not allowed to the dashboard', () => {
     renderRoutes({ user: { role: 'Mitarbeiter' }, loading: false }, '/manage', ['Admin'])
 
     expect(screen.getByText('Dashboard-Seite')).toBeInTheDocument()
     expect(screen.queryByText('Geheime Verwaltung')).toBeNull()
   })
 
-  it('schickt nicht angemeldete Personen auch bei Rollenschutz auf /login', () => {
+  it('sends people who are not signed in to /login even with role protection', () => {
     renderRoutes({ user: null, loading: false }, '/manage', ['Admin'])
 
     expect(screen.getByText('Login-Seite')).toBeInTheDocument()

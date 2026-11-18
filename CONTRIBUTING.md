@@ -20,7 +20,9 @@ npm test
 npm run lint
 ```
 
-`npm run lint` currently reports one known error in `src/contexts/AuthContext.jsx` (fast refresh rule). Please do not add new ones.
+`npm run lint` must pass without errors. If you change the UI, also run `npm run test:e2e` (needs LocalDB; install the browser once with `npx playwright install chromium`). It includes an accessibility check, so new colours need a contrast of at least 4.5:1.
+
+More on running and writing tests: [docs/testing.md](docs/testing.md).
 
 ## Guidelines
 
