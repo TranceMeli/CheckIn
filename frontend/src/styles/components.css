@@ -377,3 +377,44 @@
     width: 1.4rem;
     height: 1.4rem;
 }
+
+
+/* Sprachschalter DE | EN */
+.lang-switch {
+    display: inline-flex;
+    border: 1.5px solid hsl(0 0% 100% / 0.3);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.lang-switch button {
+    padding: 0.2rem 0.55rem;
+    border-radius: 0;
+    background: transparent;
+    color: #E6EEF0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.lang-switch button:hover { background: hsl(0 0% 100% / 0.12); }
+
+.lang-switch button[aria-pressed="true"] {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Helle Variante für Anmeldung und Rechtsseiten */
+.lang-switch--light { border-color: var(--border); background: var(--surface); }
+.lang-switch--light button { color: var(--text-muted); }
+.lang-switch--light button:hover { background: var(--primary-light); }
+.lang-switch--light button[aria-pressed="true"] { background: var(--primary); color: #fff; }
+
+.lang-corner {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 5;
+}
+
+.topbar .lang-switch { margin-right: 0.75rem; }

@@ -5,19 +5,20 @@ import { api } from "../api/api";
 import "../styles/dashboard.css";
 import "../styles/manage.css";
 import { JAHR } from "../utils/zeitraum";
+import { useLanguage } from "../i18n/LanguageContext";
 
 
 const STATUS = [
-    { value: "Office", label: "Office", icon: <Building2 size={20} aria-hidden="true" />, klasse: "office" },
-    { value: "HomeOffice", label: "Home Office", icon: <Home size={20} aria-hidden="true" />, klasse: "homeoffice" },
-    { value: "Abwesend", label: "Abwesend", icon: <Plane size={20} aria-hidden="true" />, klasse: "abwesend" },
+    { value: "Office", icon: <Building2 size={20} aria-hidden="true" />, klasse: "office" },
+    { value: "HomeOffice", icon: <Home size={20} aria-hidden="true" />, klasse: "homeoffice" },
+    { value: "Abwesend", icon: <Plane size={20} aria-hidden="true" />, klasse: "abwesend" },
 ];
-const STATUS_LABEL = Object.fromEntries(STATUS.map(s => [s.value, s.label]));
+const OHNE_ABTEILUNG = "Ohne Abteilung"; // Gruppenschlüssel für Personen ohne Abteilung
 
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const parse = (s) => new Date(`${s}T00:00:00`);
-const tagLabel = (s) => parse(s).toLocaleDateString("de-DE", { weekday: "short", day: "2-digit", month: "2-digit" });
-const monatLabel = (s) => parse(s).toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+const tagLabel = (s, locale) => parse(s).toLocaleDateString(locale, { weekday: "short", day: "2-digit", month: "2-digit" });
+const monatLabel = (s, locale) => parse(s).toLocaleDateString(locale, { month: "long", year: "numeric" });
 
 const heute = () => {
     const h = new Date();
@@ -25,6 +26,7 @@ const heute = () => {
 };
 
 function AdminManage() {
+    const { t, rich, lbl, locale } = useLanguage();
     const [mitarbeiter, setMitarbeiter] = useState([]);
     const [userId, setUserId] = useState("");
     const [datum, setDatum] = useState(() => iso(heute()));
@@ -39,15 +41,15 @@ function AdminManage() {
 
     const nachAbteilung = useMemo(() => {
         const gruppen = {};
-        mitarbeiter.forEach(m => (gruppen[m.abteilung || "Ohne Abteilung"] ??= []).push(m));
+        mitarbeiter.forEach(m => (gruppen[m.abteilung || OHNE_ABTEILUNG] ??= []).push(m));
         return Object.entries(gruppen).sort(([a], [b]) => a.localeCompare(b));
     }, [mitarbeiter]);
 
     useEffect(() => {
         api.get("/User/mitarbeiter")
             .then(res => setMitarbeiter(res.data))
-            .catch(() => toast.error("Mitarbeiter konnten nicht geladen werden."));
-    }, []);
+            .catch(() => toast.error(t("manage.toast.loadEmployees")));
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- t wechselt nur mit der Sprache, dafür wird nicht neu geladen
 
     // Wer hat heute noch nicht eingecheckt? (nur an Werktagen)
     useEffect(() => {
@@ -69,7 +71,7 @@ function AdminManage() {
             const res = await api.get(`/User/${userId}/checkins`, { params: { von: iso(von), bis: iso(bis) } });
             setEintraege(res.data);
         } catch {
-            toast.error("Einträge konnten nicht geladen werden.");
+            toast.error(t("manage.toast.loadEntries"));
         }
     }, [userId, datum.slice(0, 7)]); // eslint-disable-line react-hooks/exhaustive-deps -- nur der Monat von datum ist relevant
 
@@ -90,16 +92,16 @@ function AdminManage() {
                 url: `/User/${userId}/checkin`,
                 data: { status, datum },
             });
-            toast.success(overwrite ? "Eintrag geändert." : "Check-in nachgetragen.");
+            toast.success(overwrite ? t("manage.toast.changed") : t("manage.toast.added"));
             await ladeEintraege();
             setFehlend(f => f?.filter(m => m.userId !== userId) ?? f);
         } catch (err) {
             if (err.response?.status === 409) {
                 setBestehend(err.response.data.bestehenderStatus);
             } else if (err.response?.status === 400) {
-                toast.error("Für dieses Datum kann nichts nachgetragen werden.");
+                toast.error(t("manage.toast.badDate"));
             } else {
-                toast.error("Speichern fehlgeschlagen.");
+                toast.error(t("manage.toast.saveFailed"));
             }
         } finally {
             setSpeichert(false);
@@ -114,18 +116,18 @@ function AdminManage() {
     return (
         <div className="manage">
             <Toaster position="top-center" />
-            <h1>Verwalten</h1>
+            <h1>{t("manage.title")}</h1>
 
             <div className="manage__grid">
                 <section className="chart-box manage__form">
-                    <h3>Check-in nachtragen</h3>
+                    <h3>{t("manage.add")}</h3>
 
                     <label className="field">
-                        <span>Mitarbeiter</span>
+                        <span>{t("manage.employee")}</span>
                         <select value={userId} onChange={e => waehle(e.target.value)}>
-                            <option value="">Mitarbeiter wählen</option>
+                            <option value="">{t("manage.choose")}</option>
                             {nachAbteilung.map(([abteilung, liste]) => (
-                                <optgroup key={abteilung} label={abteilung}>
+                                <optgroup key={abteilung} label={abteilung === OHNE_ABTEILUNG ? t("dept.none") : lbl(abteilung)}>
                                     {liste.map(m => <option key={m.id} value={m.id}>{m.firstName} {m.lastName}</option>)}
                                 </optgroup>
                             ))}
@@ -133,20 +135,20 @@ function AdminManage() {
                     </label>
 
                     <label className="field">
-                        <span>Datum</span>
+                        <span>{t("manage.date")}</span>
                         <input type="date" value={datum} min={`${JAHR}-01-01`} max={maxDatum}
                             onChange={e => e.target.value && setDatum(e.target.value)} />
                     </label>
 
                     <fieldset className="field">
-                        <legend>Status</legend>
+                        <legend>{t("manage.status")}</legend>
                         <div className="status-pick">
-                            {STATUS.map(({ value, label, icon, klasse }) => (
+                            {STATUS.map(({ value, icon, klasse }) => (
                                 <label key={value} className={`status-pick__option status-pick__option--${klasse}${status === value ? " is-on" : ""}`}>
                                     <input type="radio" name="status" value={value} checked={status === value}
                                         onChange={() => setStatus(value)} />
                                     {icon}
-                                    {label}
+                                    {t(`status.${value}`)}
                                 </label>
                             ))}
                         </div>
@@ -154,7 +156,7 @@ function AdminManage() {
 
                     {bestehend && (
                         <p className="manage__hint" role="status">
-                            Für {tagLabel(datum)} gibt es schon einen Eintrag: <strong>{STATUS_LABEL[bestehend]}</strong>.
+                            {rich("manage.existing", { day: tagLabel(datum, locale), status: <strong>{t(`status.${bestehend}`)}</strong> })}
                         </p>
                     )}
 
@@ -162,12 +164,12 @@ function AdminManage() {
                         {bestehend ? (
                             <button type="button" className="btn btn--primary" disabled={!userId || speichert || bestehend === status}
                                 onClick={() => speichern(true)}>
-                                {speichert ? "Speichert…" : "Eintrag ändern"}
+                                {speichert ? t("manage.saving") : t("manage.change")}
                             </button>
                         ) : (
                             <button type="button" className="btn btn--primary" disabled={!userId || speichert}
                                 onClick={() => speichern(false)}>
-                                {speichert ? "Speichert…" : "Nachtragen"}
+                                {speichert ? t("manage.saving") : t("manage.addButton")}
                             </button>
                         )}
                     </div>
@@ -175,21 +177,21 @@ function AdminManage() {
 
                 <section className="chart-box manage__list">
                     <h3>
-                        {ausgewaehlt ? `${ausgewaehlt.firstName} ${ausgewaehlt.lastName}` : "Einträge"}
-                        <span className="chart-box__hint">{monatLabel(datum)}</span>
+                        {ausgewaehlt ? `${ausgewaehlt.firstName} ${ausgewaehlt.lastName}` : t("manage.entries")}
+                        <span className="chart-box__hint">{monatLabel(datum, locale)}</span>
                     </h3>
 
                     {!ausgewaehlt ? (
-                        <p className="chart-empty">Wähle einen Mitarbeiter, um die Einträge des Monats zu sehen.</p>
+                        <p className="chart-empty">{t("manage.pick")}</p>
                     ) : eintraege.length === 0 ? (
-                        <p className="chart-empty">Keine Einträge in diesem Monat.</p>
+                        <p className="chart-empty">{t("manage.noEntries")}</p>
                     ) : (
                         <ul className="entry-list">
                             {eintraege.map(e => (
                                 <li key={e.datum} className={e.datum === datum ? "is-selected" : ""}>
-                                    <span>{tagLabel(e.datum)}</span>
-                                    <span className={`badge badge--${e.status.toLowerCase()}`}>{STATUS_LABEL[e.status]}</span>
-                                    <button type="button" onClick={() => { setDatum(e.datum); setStatus(e.status); }}>Bearbeiten</button>
+                                    <span>{tagLabel(e.datum, locale)}</span>
+                                    <span className={`badge badge--${e.status.toLowerCase()}`}>{t(`status.${e.status}`)}</span>
+                                    <button type="button" onClick={() => { setDatum(e.datum); setStatus(e.status); }}>{t("manage.edit")}</button>
                                 </li>
                             ))}
                         </ul>
@@ -199,15 +201,15 @@ function AdminManage() {
 
             {fehlend && (
                 <section className="chart-box">
-                    <h3>Heute noch nicht eingecheckt<span className="chart-box__hint">{fehlend.length}</span></h3>
+                    <h3>{t("manage.missing")}<span className="chart-box__hint">{fehlend.length}</span></h3>
                     {fehlend.length === 0 ? (
-                        <p className="chart-empty">Alle Mitarbeiter haben heute eingecheckt.</p>
+                        <p className="chart-empty">{t("manage.missingNone")}</p>
                     ) : (
                         <ul className="missing-list">
                             {fehlend.map(m => (
                                 <li key={m.userId}>
                                     <button type="button" onClick={() => waehle(m.userId, maxDatum)}>
-                                        {m.name}<small>{m.abteilung}</small>
+                                        {m.name}<small>{lbl(m.abteilung)}</small>
                                     </button>
                                 </li>
                             ))}

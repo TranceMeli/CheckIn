@@ -1,6 +1,8 @@
 import LegalPage from "../components/LegalPage";
+import DatenschutzEn from "./legal/DatenschutzEn";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const Datenschutz = () => (
+const DatenschutzDe = () => (
     <LegalPage title="Datenschutzerklärung">
         <p className="legal-note">
             Hinweis: CheckIn ist ein fiktives Demoprojekt. Verantwortlicher, Kontaktdaten und
@@ -88,7 +90,9 @@ const Datenschutz = () => (
             erforderlich, deshalb gibt es kein Cookie-Banner. Es gibt kein Tracking, keine
             Analyse- oder Werbedienste und keine von Drittanbietern eingebundenen Schriften oder
             Skripte. Das kurzlebige Zugriffstoken wird nur im Arbeitsspeicher des Browsers
-            gehalten und nicht dauerhaft gespeichert.
+            gehalten und nicht dauerhaft gespeichert. Wenn Sie eine Sprache wählen, merkt sich
+            der Browser diese Wahl im lokalen Speicher („checkin.lang“). Sie enthält keine
+            personenbezogenen Daten.
         </p>
 
         <h2>7. Einladungs-E-Mails</h2>
@@ -130,5 +134,11 @@ const Datenschutz = () => (
         <p className="legal-meta">Stand: November 2026</p>
     </LegalPage>
 );
+
+// Deutsche Fassung ist maßgeblich, die englische ist eine Übersetzung
+const Datenschutz = () => {
+    const { lang } = useLanguage();
+    return lang === "en" ? <DatenschutzEn /> : <DatenschutzDe />;
+};
 
 export default Datenschutz;

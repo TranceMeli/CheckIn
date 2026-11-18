@@ -38,6 +38,19 @@ CheckIn is a web app where employees record their daily work location (Office, H
   </tr>
 </table>
 
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/admin-dashboard-en.png" alt="Admin dashboard in English">
+      <p align="center"><b>Admin: dashboard in English</b></p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/login-en.png" alt="Sign-in in English">
+      <p align="center"><b>Sign-in in English</b></p>
+    </td>
+  </tr>
+</table>
+
 <p>
   <img src="docs/screenshots/mobil-checkin.png" alt="Check-in on a phone" width="240">
   <img src="docs/screenshots/mobil-statistik.png" alt="Statistics on a phone" width="240">
@@ -54,6 +67,7 @@ CheckIn is a web app where employees record their daily work location (Office, H
 - **CSV and PDF export** of filtered attendance records.
 - **Role-based access** for `Admin` and `Mitarbeiter` (employee), enforced in the API.
 - **Secure sessions:** short-lived JWT access token kept in memory, refresh token rotated on every use and stored in an HttpOnly cookie. See [Architecture](docs/architecture.md#authentication-flow).
+- **German and English:** a `DE | EN` switch in the header (and on the sign-in and legal pages) changes the whole interface, including charts, dates, the imprint and the privacy policy. German is the default, the choice is remembered in the browser.
 - **Responsive UI** from phones to 24" monitors, with a bottom tab bar on small screens.
 - **GDPR-oriented pages:** public imprint (`/impressum`) and privacy policy (`/datenschutz`), see [Privacy](docs/privacy.md).
 
@@ -132,7 +146,7 @@ npm run lint
 npm run test:e2e                                 # browser tests, needs LocalDB and a one-time `npx playwright install chromium`
 ```
 
-307 automated tests cover the services, the seed data, the API with authentication and roles, the React components and pages, and the main flows in a real browser: 105 backend, 182 frontend and 20 end-to-end tests, ten of them automated accessibility checks (axe, WCAG 2.1 AA). GitHub Actions runs the backend and frontend tests on every push and pull request. Results and screenshots are in [tests.md](tests.md).
+366 automated tests cover the services, the seed data, the API with authentication and roles, the React components and pages, and the main flows in a real browser: 105 backend, 225 frontend and 36 end-to-end tests, 18 of them automated accessibility checks in German and English (axe, WCAG 2.1 AA). GitHub Actions runs the backend and frontend tests on every push and pull request. Results and screenshots are in [tests.md](tests.md).
 
 ## Documentation
 

@@ -1,13 +1,17 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const Footer = ({ className = "footer" }) => (
-    <footer className={className}>
-        <span>© 2026 CheckIn – fiktives Demoprojekt</span>
-        <nav aria-label="Rechtliches">
-            <Link to="/impressum">Impressum</Link>
-            <Link to="/datenschutz">Datenschutz</Link>
-        </nav>
-    </footer>
-);
+const Footer = ({ className = "footer" }) => {
+    const { t } = useLanguage();
+    return (
+        <footer className={className}>
+            <span>{t("footer.demo")}</span>
+            <nav aria-label={t("footer.legal")}>
+                <Link to="/impressum">{t("footer.imprint")}</Link>
+                <Link to="/datenschutz">{t("footer.privacy")}</Link>
+            </nav>
+        </footer>
+    );
+};
 
 export default Footer;

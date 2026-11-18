@@ -2,7 +2,7 @@
 
 Wie man Tests ausführt, schreibt und Fehler findet, steht in [docs/testing.md](docs/testing.md).
 
-CheckIn hat automatisierte Tests für Backend, Frontend und den Browser: **105 Backend-Tests**, **182 Frontend-Tests** und **20 End-to-End-Tests** (zusammen 307), alle grün.
+CheckIn hat automatisierte Tests für Backend, Frontend und den Browser: **105 Backend-Tests**, **225 Frontend-Tests** und **36 End-to-End-Tests** (zusammen 366), alle grün.
 
 Zuletzt ausgeführt auf dem Branch `chore/ci-and-e2e` mit .NET 10 (ASP.NET Core und EF Core 10.0.15, SQL Server LocalDB für die Migrationsprüfung).
 
@@ -10,9 +10,9 @@ Zuletzt ausgeführt auf dem Branch `chore/ci-and-e2e` mit .NET 10 (ASP.NET Core 
 |---------|----------|-------|-----|
 | Backend, Unit | xUnit, EF Core InMemory, echter `UserManager` | 54 | `backend.Tests/Unit` |
 | Backend, Integration | xUnit, `WebApplicationFactory` (komplette API im Speicher) | 51 | `backend.Tests/Integration` |
-| Frontend | Vitest, React Testing Library, jsdom | 182 | `frontend/src/__tests__` |
-| End-to-End | Playwright (Chromium) gegen die echte App | 10 | `frontend/e2e` (außer `a11y.spec.js`) |
-| Barrierefreiheit | axe-core über Playwright, WCAG 2.1 A und AA | 10 | `frontend/e2e/a11y.spec.js` |
+| Frontend | Vitest, React Testing Library, jsdom | 225 | `frontend/src/__tests__` |
+| End-to-End | Playwright (Chromium) gegen die echte App | 18 | `frontend/e2e` (außer `a11y.spec.js`) |
+| Barrierefreiheit | axe-core über Playwright, WCAG 2.1 A und AA | 18 | `frontend/e2e/a11y.spec.js` |
 
 ## Ausführen
 
@@ -48,11 +48,11 @@ Zusätzlich zu den Tests habe ich nach dem Upgrade geprüft, dass `dotnet ef mig
 
 ![Frontend-Tests](docs/screenshots/tests-frontend.png)
 
-**Frontend, Abdeckung** (86 % der Anweisungen, 93 % der Verzweigungen)
+**Frontend, Abdeckung** (90 % der Anweisungen, 93 % der Verzweigungen)
 
 ![Frontend-Abdeckung](docs/screenshots/tests-frontend-coverage.png)
 
-**End-to-End und Barrierefreiheit** (20 Tests)
+**End-to-End und Barrierefreiheit** (36 Tests)
 
 ![End-to-End-Tests](docs/screenshots/tests-e2e.png)
 
@@ -82,6 +82,8 @@ Die Integrationstests starten die echte API mit Authentifizierung und Rollen, ab
 | `components/*` | 65 | Karten, Footer, Perioden-Leiste, Navigation je Rolle, Benutzer-Icon (Menü, Escape, Klick daneben), Ziel-Meter, Wochenraster, Heatmap, Leerzustände, Layout, CSV-Export |
 | `routes/ProtectedRoute.test.jsx` | 6 | Weiterleitung auf `/login` und bei falscher Rolle |
 | `pages/*` | 78 | Verwalten, Check-in-Seite, Login, Impressum, Datenschutz, Auth-Kontext, Admin- und Mitarbeiter-Dashboard |
+| `i18n/i18n.test.js` | 20 | Deutsche und englische Wörterbücher haben dieselben Schlüssel und Platzhalter, Übersetzen mit Platzhaltern, Prozentformat je Sprache, Rückfall auf Deutsch, Beschriftungen aus dem Backend (Wochentage, Monate, Abteilungen), gespeicherte Sprache auch bei gesperrtem Speicher |
+| `i18n/Language.test.jsx` | 23 | Sprachschalter (Standard Deutsch, Wechsel in beide Richtungen, Speichern, Wiederherstellen, `lang`-Attribut) und die englische Oberfläche: Navigation, Rollen, Zeiträume, Diagramme, Impressum und Datenschutzerklärung |
 
 ## End-to-End und Barrierefreiheit
 
@@ -90,7 +92,8 @@ Die Integrationstests starten die echte API mit Authentifizierung und Rollen, ab
 | `auth.spec.js` | 7 | Login als Admin und Mitarbeiter, falsches Passwort, Umleitung ohne Anmeldung, Mitarbeiter auf Admin-Seite, Abmelden, Impressum und Datenschutz ohne Anmeldung |
 | `checkin.spec.js` | 1 | Check-in-Seite mit drei Optionen; der Check-in ist gesperrt, wenn für heute schon ein Eintrag existiert |
 | `admin.spec.js` | 2 | Dashboard-Filter ohne Fehler, Navigation zu Verwalten und Export |
-| `a11y.spec.js` | 10 | axe-Prüfung (WCAG 2.1 A und AA) von Login, Impressum, Datenschutz, den drei Admin-Seiten, Mitarbeiter-Statistik und Check-in, dazu Dashboard und Check-in bei 390 px Breite |
+| `language.spec.js` | 8 | Sprachschalter auf Anmeldung, Rechtsseiten und Dashboard; die Wahl bleibt nach Neuladen und Abmelden; Zeiträume, Verwalten, Export, Check-in und Statistik auf Englisch |
+| `a11y.spec.js` | 18 | axe-Prüfung (WCAG 2.1 A und AA) von Login, Impressum, Datenschutz, den drei Admin-Seiten, Mitarbeiter-Statistik und Check-in, dazu Dashboard und Check-in bei 390 px Breite und dieselben acht Seiten auf Englisch |
 
 Der Check-in-Test hängt vom Datum ab: Die Seed-Daten enthalten jeden Werktag 2026. An einem Werktag prüft er deshalb nur den gesperrten Zustand, an Tagen ohne Eintrag (Wochenende, anderes Jahr) checkt er wirklich ein.
 
@@ -103,6 +106,7 @@ Der erste axe-Lauf fand auf allen acht Seiten Verstöße, die jetzt behoben sind
 - Die Auswahlfelder der Export-Seite hatten keinen Namen (`aria-label` ergänzt).
 - Das Wochenraster hatte `role="table"` ohne Zeilen. Es hat jetzt Zeilen, Spaltenköpfe und Zeilenköpfe.
 - Horizontal scrollbare Tabellen sind per Tastatur erreichbar (`tabindex`, `role="region"`).
+- Beim Einbau des Sprachschalters fand axe einen weiteren Fehler: Die Knöpfe zeigten „DE“ und „EN“, hießen aber „Deutsch“ und „English“ (WCAG 2.5.3, Label in Name). Der zugängliche Name beginnt jetzt mit dem sichtbaren Text („DE – Deutsch“).
 
 ## Regressionstests
 

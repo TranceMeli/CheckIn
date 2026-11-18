@@ -1,3 +1,5 @@
+import { localeOf, monthNames, translate } from "../i18n/i18n";
+
 export const JAHR = 2026; // Demodaten existieren nur für 2026
 
 export const MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni",
@@ -13,7 +15,7 @@ export const PERIODEN = [
 export const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 export const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
 export const mondayOf = (d) => addDays(d, -((d.getDay() + 6) % 7));
-export const fmt = (d) => d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+export const fmt = (d, lang = "de") => d.toLocaleDateString(localeOf(lang), { day: "2-digit", month: "2-digit" });
 
 export const isoWeek = (d) => {
     const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -27,18 +29,18 @@ export const clampToYear = (d) => {
     return d < min ? min : d > max ? max : d;
 };
 
-// Start/Ende und Beschriftung des gewählten Zeitraums
-export const zeitraum = (periode, anker) => {
+// Start/Ende und Beschriftung des gewählten Zeitraums (lang: "de" oder "en")
+export const zeitraum = (periode, anker, lang = "de") => {
     if (periode === "week") {
         const von = mondayOf(anker);
         const bis = addDays(von, 6);
-        return { von, bis, label: `KW ${isoWeek(von)} · ${fmt(von)} – ${fmt(bis)}` };
+        return { von, bis, label: translate(lang, "period.weekLabel", { week: isoWeek(von), von: fmt(von, lang), bis: fmt(bis, lang) }) };
     }
     if (periode === "month") {
         return {
             von: new Date(anker.getFullYear(), anker.getMonth(), 1),
             bis: new Date(anker.getFullYear(), anker.getMonth() + 1, 0),
-            label: `${MONATE[anker.getMonth()]} ${anker.getFullYear()}`,
+            label: `${monthNames(lang)[anker.getMonth()]} ${anker.getFullYear()}`,
         };
     }
     if (periode === "quarter") {
@@ -49,7 +51,7 @@ export const zeitraum = (periode, anker) => {
             label: `Q${q + 1} ${anker.getFullYear()}`,
         };
     }
-    return { von: new Date(JAHR, 0, 1), bis: new Date(JAHR, 11, 31), label: `Jahr ${JAHR}` };
+    return { von: new Date(JAHR, 0, 1), bis: new Date(JAHR, 11, 31), label: translate(lang, "period.yearLabel", { year: JAHR }) };
 };
 
 export const verschiebe = (periode, anker, richtung) => {

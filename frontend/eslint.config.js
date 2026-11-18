@@ -33,7 +33,7 @@ export default defineConfig([
   },
   {
     // Provider und Hook liegen bewusst in einer Datei; die Regel betrifft nur Fast Refresh im Dev-Server.
-    files: ['src/contexts/AuthContext.jsx'],
+    files: ['src/contexts/AuthContext.jsx', 'src/i18n/LanguageContext.jsx'],
     rules: { 'react-refresh/only-export-components': 'off' },
   },
 ])

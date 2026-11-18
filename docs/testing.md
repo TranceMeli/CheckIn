@@ -46,15 +46,15 @@ Before a pull request, run at least the tests of the part you changed. If you ch
 
 ![Backend tests](screenshots/tests-backend.png)
 
-**Frontend** (182 tests)
+**Frontend** (225 tests)
 
 ![Frontend tests](screenshots/tests-frontend.png)
 
-**Frontend coverage** (86 % of statements, 93 % of branches)
+**Frontend coverage** (90 % of statements, 93 % of branches)
 
 ![Frontend coverage](screenshots/tests-frontend-coverage.png)
 
-**End-to-end and accessibility** (20 tests)
+**End-to-end and accessibility** (36 tests)
 
 ![End-to-end tests](screenshots/tests-e2e.png)
 
@@ -67,8 +67,8 @@ The images are rendered from the real console output of the runs. Test names are
 | Backend, unit | xUnit, EF Core InMemory | `backend.Tests/Unit` | services and seed data with a real `UserManager` | seconds |
 | Backend, integration | xUnit, `WebApplicationFactory` | `backend.Tests/Integration` | the complete API with authentication, roles and status codes | seconds |
 | Frontend | Vitest, React Testing Library, jsdom | `frontend/src/__tests__` | components, pages, routes, helpers, the API client | about 20 s |
-| End-to-end | Playwright (Chromium) | `frontend/e2e` | login, access control, check-in and admin area in a real browser | about 1 minute |
-| Accessibility | axe-core via Playwright | `frontend/e2e/a11y.spec.js` | WCAG 2.1 A and AA on all pages, also at 390 px width | part of the e2e run |
+| End-to-end | Playwright (Chromium) | `frontend/e2e` | login, access control, check-in, admin area and the language switch in a real browser | about 1 minute |
+| Accessibility | axe-core via Playwright | `frontend/e2e/a11y.spec.js` | WCAG 2.1 A and AA on all pages in German and English, also at 390 px width | part of the e2e run |
 
 The mix follows the test pyramid: many fast unit tests, fewer integration tests and a few e2e tests for the most important flows.
 
@@ -155,7 +155,22 @@ test('signing out leads back to the login', async ({ page }) => {
 
 Find elements by role and visible name (`getByRole`, `getByLabel`). Playwright waits until an element is ready on its own. Write e2e tests only for what really needs a browser, everything else belongs to the levels below.
 
-A new page gets an entry in `a11y.spec.js`.
+A new page gets an entry in `a11y.spec.js`, once for German and once for English.
+
+### Texts and languages
+
+The app is German by default and can be switched to English. Every UI text lives in `frontend/src/i18n/messages.de.js` and `messages.en.js` and is read with `t("key")`.
+
+- A new text needs a key in **both** files. The test `Messages › has the same keys in German and English` fails otherwise, and another one checks that the `{placeholders}` match.
+- Component tests render without a provider, so they get German. To test English, store the language first and wrap the component in `LanguageProvider`:
+
+```jsx
+window.localStorage.setItem('checkin.lang', 'en')
+render(<LanguageProvider><MemoryRouter><Navbar /></MemoryRouter></LanguageProvider>)
+```
+
+- E2E tests sign in with `login(page, ADMIN, 'en')` for English. `setLanguage(page, 'en')` does the same for pages without sign-in. Test the switch itself by clicking the `DE`/`EN` buttons, because `setLanguage` stores the language again on every page load.
+
 
 ## Test data and mocks
 
@@ -227,7 +242,7 @@ Common causes:
 ## Conventions
 
 - **Location:** backend unit tests in `backend.Tests/Unit/<Class>Tests.cs`, API tests in `backend.Tests/Integration/<Area>ApiTests.cs`, frontend tests in `frontend/src/__tests__/` with the same structure as `src` (`pages`, `components`, `routes`, `api`, `utils`), e2e tests in `frontend/e2e/<topic>.spec.js`.
-- **Names:** all test names are English. Backend tests are sentences with underscores that state the result (`Admin_can_add_a_check_in_for_a_past_day`), frontend and e2e tests are plain sentences (`it('shows the three status cards')`). Texts of the German UI that a test looks for (button names, headings) stay German and go in quotes, for example `signs out via "Abmelden"`.
+- **Names:** all test names are English. Backend tests are sentences with underscores that state the result (`Admin_can_add_a_check_in_for_a_past_day`), frontend and e2e tests are plain sentences (`it('shows the three status cards')`). Texts of the German UI that a test looks for (button names, headings) stay German and go in quotes (English texts only in tests that switch the language), for example `signs out via "Abmelden"`.
 - **Structure:** arrange, act, assert, in that order and without logic in the test (no loops or conditions that hide the result). The date-dependent check-in e2e test is an exception and explains why in a comment.
 - **Independent:** no test relies on another. Each creates its own data and does not clean up other people's data.
 - **Stable:** no fixed waits (`sleep`, `waitForTimeout`) and no dependence on the time of day unless it is part of the test. Flaky tests get fixed, not skipped.

@@ -90,6 +90,7 @@ CheckIn/
     │   │   ├── DateTime.jsx
     │   │   ├── ExportTable.jsx
     │   │   ├── Footer.jsx
+    │   │   ├── LanguageSwitch.jsx
     │   │   ├── Karte.jsx
     │   │   ├── LegalPage.jsx
     │   │   ├── Navbar.jsx
@@ -100,6 +101,11 @@ CheckIn/
     │   │   └── chartConfig.js
     │   ├── contexts/
     │   │   └── AuthContext.jsx
+    │   ├── i18n/
+    │   │   ├── LanguageContext.jsx   provider and hook (t, lang, setLang)
+    │   │   ├── i18n.js               translate, storage, month names
+    │   │   ├── messages.de.js        German texts (default)
+    │   │   └── messages.en.js        English texts
     │   ├── layout/
     │   │   └── MainLayout.jsx
     │   ├── pages/
@@ -111,6 +117,7 @@ CheckIn/
     │   │   ├── Datenschutz.jsx
     │   │   ├── Impressum.jsx
     │   │   ├── Login.jsx
+    │   │   ├── legal/            English imprint and privacy policy
     │   │   ├── Unauthorized.jsx
     │   │   └── UserView.jsx
     │   ├── routes/
@@ -128,6 +135,16 @@ CheckIn/
     │   └── main.jsx
     └── vite.config.js
 ```
+
+## Languages
+
+The frontend is German by default and can be switched to English with the `DE | EN` buttons (`LanguageSwitch`).
+
+- `LanguageProvider` holds the language, stores it in `localStorage` (`checkin.lang`) and sets `<html lang>`. Components read it with `useLanguage()`, which returns `t(key, params)`, `lbl(value)`, `pct(n)`, the locale for dates and the month names. Without a provider (component tests) the language is German.
+- All texts are keys in `messages.de.js` and `messages.en.js` with `{placeholders}`. A missing English text falls back to German.
+- The backend is not translated. It returns weekday, month and department names in German, and the frontend maps the known values with `lbl()`. Unknown values, such as new departments, are shown unchanged. Status values (`Office`, `HomeOffice`, `Abwesend`) are the same in both languages and only their display names change.
+- The imprint and the privacy policy are separate components per language (`Impressum.jsx`/`Datenschutz.jsx` and `pages/legal/*En.jsx`). The German text is authoritative, the English one says so.
+- Dates use the locale of the language (`de-DE`, `en-GB`).
 
 ## Authentication flow
 

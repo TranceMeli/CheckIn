@@ -6,10 +6,13 @@ import axios from "axios";
 import accountIcon from "../assets/account_icon.svg";
 import { Toaster, toast } from "react-hot-toast";
 import Footer from "../components/Footer";
+import LanguageSwitch from "../components/LanguageSwitch";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { t } = useLanguage();
     const [credentials, setCredentials] = useState({ email: "", password: "" });
 
     const handleChange = (e) => {
@@ -36,31 +39,32 @@ const Login = () => {
         };
 
         toast.promise(loginRequest(), {
-            loading: "Einloggen...",
-            success: "Willkommen",
-            error: "Email oder Passwort falsch",
+            loading: t("login.loading"),
+            success: t("login.success"),
+            error: t("login.error"),
         });
     };
 
     return (
         <div className="login-page">
             <Toaster position="top-center" />
+            <div className="lang-corner"><LanguageSwitch variant="light" /></div>
             <div className="login-container">
-                <h1>Willkommen bei CheckIn</h1>
+                <h1>{t("login.title")}</h1>
                 <img src={accountIcon} className="account-icon" alt="" />
                 <form onSubmit={handleSubmit}>
                     <label>
-                        Email
+                        {t("login.email")}
                         <input
                             type="email"
                             name="email"
                             value={credentials.email}
                             onChange={handleChange}
-                            placeholder="name@firma.de"
+                            placeholder={t("login.emailPlaceholder")}
                         />
                     </label>
                     <label>
-                        Passwort
+                        {t("login.password")}
                         <input
                             type="password"
                             name="password"
@@ -71,7 +75,7 @@ const Login = () => {
                             required
                         />
                     </label>
-                    <button className="lBtn" type="submit">Einloggen</button>
+                    <button className="lBtn" type="submit">{t("login.submit")}</button>
                 </form>
             </div>
             <Footer className="login-footer" />

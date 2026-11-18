@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from '@playwright/test';
-import { ADMIN, MITARBEITER, login } from './helpers.js';
+import { ADMIN, MITARBEITER, login, setLanguage } from './helpers.js';
 
 // Automatische Prüfung gegen WCAG 2.0/2.1 Level A und AA. axe findet nur einen Teil der Probleme,
 // Tastatur- und Screenreader-Bedienung müssen weiterhin von Hand geprüft werden.
@@ -66,4 +66,42 @@ test.describe('Accessibility on a phone (390 px)', () => {
     await page.goto('/checkin');
     await pruefe(page);
   });
+});
+
+// Die englischen Texte haben eigene Längen und Farben-Kontraste (z. B. in den Diagrammen), deshalb ebenfalls prüfen.
+test.describe('Accessibility in English', () => {
+  for (const [name, pfad] of [
+    ['Login', '/login'],
+    ['Imprint', '/impressum'],
+    ['Privacy policy', '/datenschutz'],
+  ]) {
+    test(`${name} (signed out)`, async ({ page }) => {
+      await setLanguage(page, 'en');
+      await page.goto(pfad);
+      await pruefe(page);
+    });
+  }
+
+  for (const [name, pfad] of [
+    ['Dashboard', '/dashboard'],
+    ['Manage', '/manage'],
+    ['Export', '/list'],
+  ]) {
+    test(`Admin: ${name}`, async ({ page }) => {
+      await login(page, ADMIN, 'en');
+      await page.goto(pfad);
+      await pruefe(page);
+    });
+  }
+
+  for (const [name, pfad] of [
+    ['Statistics', '/dashboard'],
+    ['Check-in', '/checkin'],
+  ]) {
+    test(`Employee: ${name}`, async ({ page }) => {
+      await login(page, MITARBEITER, 'en');
+      await page.goto(pfad);
+      await pruefe(page);
+    });
+  }
 });

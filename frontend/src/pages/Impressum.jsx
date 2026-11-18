@@ -1,6 +1,8 @@
 import LegalPage from "../components/LegalPage";
+import ImpressumEn from "./legal/ImpressumEn";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const Impressum = () => (
+const ImpressumDe = () => (
     <LegalPage title="Impressum">
         <p className="legal-note">
             Hinweis: CheckIn ist ein fiktives Demoprojekt. Alle Angaben auf dieser Seite sind
@@ -37,5 +39,11 @@ const Impressum = () => (
         <p>Max Mustermann, Anschrift wie oben</p>
     </LegalPage>
 );
+
+// Deutsche Fassung ist maßgeblich, die englische ist eine Übersetzung
+const Impressum = () => {
+    const { lang } = useLanguage();
+    return lang === "en" ? <ImpressumEn /> : <ImpressumDe />;
+};
 
 export default Impressum;

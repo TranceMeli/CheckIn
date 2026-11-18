@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { User, LogOut } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
-
-const ROLLEN = { Admin: "Administrator", Mitarbeiter: "Mitarbeiter" };
+import { useLanguage } from "../i18n/LanguageContext";
 
 // Benutzer-Icon im Header: wird nur gerendert, wenn jemand eingeloggt ist
 const UserMenu = () => {
     const { user, logout } = useAuth();
+    const { t } = useLanguage();
     const [offen, setOffen] = useState(false);
     const ref = useRef(null);
 
@@ -25,20 +25,24 @@ const UserMenu = () => {
 
     if (!user) return null;
 
+    // Unbekannte Rollen werden unverändert angezeigt
+    const rolleKey = `role.${user.role}`;
+    const rolle = t(rolleKey) === rolleKey ? user.role : t(rolleKey);
+
     return (
         <div className="user-menu" ref={ref}>
             <button type="button" className="user-menu__trigger" aria-haspopup="menu" aria-expanded={offen}
-                aria-label="Benutzermenü" onClick={() => setOffen(o => !o)}>
+                aria-label={t("user.menu")} onClick={() => setOffen(o => !o)}>
                 <User size={18} aria-hidden="true" />
             </button>
             {offen && (
                 <div className="user-menu__panel" role="menu">
                     <div className="user-menu__info">
                         <strong>{user.email}</strong>
-                        <span>{ROLLEN[user.role] ?? user.role}</span>
+                        <span>{rolle}</span>
                     </div>
                     <button type="button" role="menuitem" className="user-menu__item" onClick={() => logout()}>
-                        <LogOut size={16} aria-hidden="true" /> Abmelden
+                        <LogOut size={16} aria-hidden="true" /> {t("user.logout")}
                     </button>
                 </div>
             )}

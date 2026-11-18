@@ -28,7 +28,7 @@ More on running and writing tests: [docs/testing.md](docs/testing.md).
 
 - Work on a branch such as `feature/short-description` or `fix/short-description`, not on `main`.
 - Add or update tests for changed behaviour. Bug fixes should come with a test that fails without the fix.
-- Keep user-facing texts in German and code identifiers consistent with the existing code.
+- Put every user-facing text into both `frontend/src/i18n/messages.de.js` and `messages.en.js` and read it with `t("key")`. German is the default language. Keep code identifiers consistent with the existing code.
 - Comment the *why*, not the *what*: a business rule, a constraint, a workaround. Delete commented-out code, Git keeps the history.
 - Never commit secrets. `appsettings.Development.json` and `.env` files are git-ignored.
 - Write commit messages in the imperative, for example `Add check-in correction endpoint`.

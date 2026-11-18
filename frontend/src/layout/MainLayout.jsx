@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import UserMenu from "../components/UserMenu";
 import Footer from "../components/Footer";
+import LanguageSwitch from "../components/LanguageSwitch";
 
 const MainLayout = () => (
     <div className="layout-container">
@@ -13,6 +14,7 @@ const MainLayout = () => (
             </div>
             <Navbar variant="top" />
             <span className="topbar__spacer" />
+            <LanguageSwitch />
             <UserMenu />
         </header>
 
