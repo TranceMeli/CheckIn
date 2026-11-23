@@ -1,4 +1,3 @@
-import './styles/App.css';
 import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import Login from './pages/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -8,6 +7,8 @@ import CheckInPage from './pages/CheckInPage';
 import MainLayout from './layout/MainLayout';
 import AdminManage from './pages/AdminManage';
 import AdminList from './pages/AdminList';
+import Impressum from './pages/Impressum';
+import Datenschutz from './pages/Datenschutz';
 
 
 
@@ -18,7 +19,8 @@ function App() {
  <Routes>
   <Route path="/" element={<Login></Login>} />
   <Route path="/login" element={<Login />} />
-  {/* <Route path="/checkin" element={<CheckInPage />} /> */}
+  <Route path="/impressum" element={<Impressum />} />
+  <Route path="/datenschutz" element={<Datenschutz />} />
 
   <Route element={<ProtectedRoute />}>
   <Route element={<MainLayout />}>

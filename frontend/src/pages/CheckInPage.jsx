@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
-import { Home, Building2, Clock } from "lucide-react";
+import { Home, Building2, Clock, CheckCircle2 } from "lucide-react";
 import Button from "../components/Button";
 import { toast, Toaster } from "react-hot-toast";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const options = [
-    { value: "HomeOffice", label: "Home Office", color: "43 96% 56%",  Icon: Home },
-    { value: "Office",     label: "Office",      color: "168 84% 32%", Icon: Building2 },
-    { value: "Abwesend",   label: "Abwesend",    color: "0 83% 60%",   Icon: Clock },
+    { value: "HomeOffice", color: "43 96% 56%",  Icon: Home },
+    { value: "Office",     color: "168 84% 32%", Icon: Building2 },
+    { value: "Abwesend",   color: "0 83% 60%",   Icon: Clock },
 ];
 
 function CheckInPage() {
+    const { t } = useLanguage();
     const [selected, setSelected] = useState("");
     const [currentStatus, setCurrentStatus] = useState("");
     const [loading, setLoading] = useState(false);
@@ -26,9 +28,9 @@ function CheckInPage() {
             })
             .catch(err => {
                 if (err.response?.status === 404) return;
-                toast.error("Fehler beim Laden der Daten");
+                toast.error(t("checkin.loadError"));
             });
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- t wechselt nur mit der Sprache, dafür wird nicht neu geladen
 
     const hasChanged = selected && selected !== currentStatus && !checkedInToday;
 
@@ -39,23 +41,21 @@ function CheckInPage() {
             await api.post("/CheckIn/set-status", { status: selected });
             setCurrentStatus(selected);
             setCheckedInToday(true);
-            toast.success("Erfolgreich eingecheckt!");
+            toast.success(t("checkin.success"));
         } catch {
-            toast.error("Speichern fehlgeschlagen");
+            toast.error(t("checkin.saveError"));
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <>
+        <div className="checkin-page">
             <Toaster position="top-center" />
             {checkedInToday && (
-                <p style={{
-                    textAlign: "center", padding: "12px 0 0",
-                    color: "#5E7B7A", fontSize: 14
-                }}>
-                    Du hast heute bereits eingecheckt.
+                <p className="checkin-note" role="status">
+                    <CheckCircle2 size={28} aria-hidden="true" />
+                    {t("checkin.already")}
                 </p>
             )}
             <div className="container">
@@ -73,16 +73,17 @@ function CheckInPage() {
                                 name="status"
                                 value={opt.value}
                                 checked={isActive}
+                                disabled={isDisabled}
                                 onChange={() => setSelected(opt.value)}
                             />
                             <div className="card-center">
                                 <opt.Icon size={80} strokeWidth={1.5} />
-                                <div className="card-title">{opt.label}</div>
+                                <div className="card-title">{t(`status.${opt.value}`)}</div>
                             </div>
                             {isActive && (
                                 <div className="card-action">
                                     <Button
-                                        label={loading ? "Speichert..." : "Einchecken"}
+                                        label={loading ? t("checkin.saving") : t("checkin.submit")}
                                         onClick={handleConfirm}
                                         disabled={loading || checkedInToday}
                                         variant="primary"
@@ -93,7 +94,7 @@ function CheckInPage() {
                     );
                 })}
             </div>
-        </>
+        </div>
     );
 }
 

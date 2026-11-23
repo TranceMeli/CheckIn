@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Neue Schwachstellen erscheinen auch ohne Codeänderung, daher wöchentlich der Abhängigkeits-Scan.
+  schedule:
+    - cron: "0 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend (Build und Tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      # Die Tests nutzen EF InMemory, es wird keine SQL-Server-Instanz benötigt.
+      - run: dotnet test backend.Tests/backend.Tests.csproj --configuration Release
+
+  frontend:
+    name: Frontend (Lint, Tests, Build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  dependency-scan:
+    name: Abhängigkeits-Scan
+    runs-on: ubuntu-latest
+    # Meldet Funde, blockiert aber keine Pull Requests: Ein Teil der Funde liegt in Dev-Werkzeugen
+    # (Vite, Vitest), deren Behebung ein Major-Update erfordert.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: NuGet-Pakete auf bekannte Schwachstellen prüfen
+        run: |
+          dotnet list backend/backend.csproj package --vulnerable --include-transitive | tee nuget-audit.txt
+          if grep -q "has the following vulnerable packages" nuget-audit.txt; then
+            echo "Anfällige NuGet-Pakete gefunden" >&2
+            exit 1
+          fi
+      - name: npm-Pakete auf bekannte Schwachstellen prüfen
+        working-directory: frontend
+        run: |
+          npm ci
+          npm audit --audit-level=high

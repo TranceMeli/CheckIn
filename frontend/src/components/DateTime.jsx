@@ -4,9 +4,6 @@ const DateTime = () => {
     const [date, setDate] = useState(new Date());
 
     useEffect(() => {
-        // BUG WAR: setInterval(() => setDate(new Date(), 1000))
-        // 1000 war zweites Argument von setDate, nicht von setInterval
-        // FIX:     setInterval(() => setDate(new Date()), 1000)
         const timer = setInterval(() => setDate(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);

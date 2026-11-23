@@ -1,291 +1,177 @@
 # CheckIn
 
-![CheckIn Preview](frontend/src/assets/checkin_v2_preview.jpeg)
+![Version](https://img.shields.io/badge/version-3.0-0D9488?style=for-the-badge)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-10.0-512BD4?style=for-the-badge&logo=dotnet)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
+![MSSQL](https://img.shields.io/badge/MSSQL-LocalDB-CC2927?style=for-the-badge&logo=microsoftsqlserver)
+![Entity Framework](https://img.shields.io/badge/Entity_Framework-Core-512BD4?style=for-the-badge)
 
-A full-stack web application for tracking employee attendance with role-based access control, JWT authentication with refresh token rotation, and an analytics dashboard.
+CheckIn is a web app where employees record their daily work location (Office, Home Office or Absent) and admins analyse attendance by department, employee and period.
 
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-512BD4?style=flat-square&logo=dotnet)
-![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)
-![MSSQL](https://img.shields.io/badge/MSSQL-LocalDB-CC2927?style=flat-square&logo=microsoftsqlserver)
-![Entity Framework](https://img.shields.io/badge/Entity_Framework-Core-512BD4?style=flat-square)
+> CheckIn is a **fictional demo project**. All employees, departments, company details and check-in data are made-up seed data, and the app is not production-ready as it is (see [Known limitations](#known-limitations)).
 
-## Motivation
+![CheckIn dashboard](docs/screenshots/admin-dashboard-top.png)
 
-CheckIn 2.0 is the continued development of my final IHK apprenticeship project.
+<details>
+<summary>More screenshots</summary>
 
-The goal was not only to improve the user interface but also to redesign the authentication system, introduce refresh token rotation, improve security, and refactor the overall architecture.
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/admin-dashboard.png" alt="Admin dashboard">
+      <p align="center"><b>Admin: dashboard</b></p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/mitarbeiter-statistik.png" alt="Employee statistics">
+      <p align="center"><b>Employee: statistics</b></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/admin-verwalten.png" alt="Verwalten">
+      <p align="center"><b>Admin: add or correct check-ins</b></p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/mitarbeiter-checkin.png" alt="Check-in">
+      <p align="center"><b>Employee: check-in</b></p>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/admin-dashboard-en.png" alt="Admin dashboard in English">
+      <p align="center"><b>Admin: dashboard in English</b></p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/screenshots/login-en.png" alt="Sign-in in English">
+      <p align="center"><b>Sign-in in English</b></p>
+    </td>
+  </tr>
+</table>
+
+<p>
+  <img src="docs/screenshots/mobil-checkin.png" alt="Check-in on a phone" width="240">
+  <img src="docs/screenshots/mobil-statistik.png" alt="Statistics on a phone" width="240">
+</p>
+
+</details>
 
 ## Features
 
-- **Daily check-in** — employees log their work location each day: Office, Home Office, or Absent (`Abwesend`)
-- **Role-based access** — separate views and permissions for admins and employees (`Mitarbeiter`)
-- **Secure authentication** — JWT access tokens stored in memory + HttpOnly refresh token cookies (no localStorage)
-- **Automatic token refresh** — axios interceptor silently renews expired tokens without interrupting the user
-- **Admin dashboard** — attendance statistics and charts, filterable by department (`Abteilung`), employee, month, and year
-- **Employee dashboard** — personal attendance history with a yearly overview chart
-- **CSV & PDF export** — download filtered attendance records
-- **Admin corrections** — admins can retroactively submit a check-in for any employee
-- **Email invitations** — new employees receive an email with a one-time link to set their password
+- **Daily check-in:** employees pick Office, Home Office or Absent once a day.
+- **Admin dashboard:** KPI cards, a Monday-to-Friday team grid, trend against a 60 % office target, weekday and department charts, a year heatmap and rankings. Filter by week, month, quarter or year, by department and by employee. See [Dashboard and charts](docs/dashboard.md).
+- **Employee statistics:** the same charts, limited to your own data.
+- **Add and correct check-ins:** admins can add a check-in for any past day, correct an existing one and see who has not checked in yet.
+- **CSV and PDF export** of filtered attendance records.
+- **Role-based access** for `Admin` and `Mitarbeiter` (employee), enforced in the API.
+- **Secure sessions:** short-lived JWT access token kept in memory, refresh token rotated on every use and stored in an HttpOnly cookie. See [Architecture](docs/architecture.md#authentication-flow).
+- **German and English:** a `DE | EN` switch in the header (and on the sign-in and legal pages) changes the whole interface, including charts, dates, the imprint and the privacy policy. German is the default, the choice is remembered in the browser.
+- **Responsive UI** from phones to 24" monitors, with a bottom tab bar on small screens.
+- **GDPR-oriented pages:** public imprint (`/impressum`) and privacy policy (`/datenschutz`), see [Privacy](docs/privacy.md).
 
----
+## Prerequisites
 
-## German Domain Terms
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- [Node.js](https://nodejs.org/) 20.19 or newer (required by Vite 7)
+- SQL Server LocalDB (included with Visual Studio) or another SQL Server instance
+- The EF Core CLI: `dotnet tool install --global dotnet-ef`
 
-Since this app was built for a German-speaking workplace, some domain terms appear in the codebase and UI:
+## Quick start
 
-| German | English |
-|--------|---------|
-| Mitarbeiter | Employee |
-| Abteilung | Department |
-| Abwesend | Absent |
-| Einloggen | Log in |
-| Abmelden | Log out |
-| Auswertungen | Analytics / Reports |
-| Einchecken | Check in |
-| Nachname / Vorname | Last name / First name |
-| Datum | Date |
+1. Create `backend/appsettings.Development.json` (it is git-ignored). See [Configuration](#configuration) for the keys:
 
----
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=CheckInDev;Trusted_Connection=True;TrustServerCertificate=True"
+     },
+     "Jwt": {
+       "Key": "replace-with-a-random-key-of-at-least-32-characters",
+       "Issuer": "CheckInAPI",
+       "Audience": "CheckInUsers",
+       "ExpiresInMinutes": 15
+     }
+   }
+   ```
 
-## Tech Stack
+2. Start the API. It creates the schema with the migrations and, in `Development`, seeds demo data.
 
-### Backend
-- ASP.NET Core 8 Web API
-- Entity Framework Core with MSSQL (LocalDB for development)
-- ASP.NET Core Identity for user management
-- JWT Bearer authentication with refresh token rotation
-- Roles: `Admin`, `Mitarbeiter` (Employee)
+   ```bash
+   cd backend
+   dotnet ef database update
+   dotnet run --launch-profile https   # https://localhost:7005, Swagger at /swagger
+   ```
 
-### Frontend
-- React 18 with Vite
-- Axios with request/response interceptors
-- Recharts for data visualization
-- react-hot-toast for notifications
-- jsPDF + jspdf-autotable for PDF export
+3. Start the frontend in a second terminal:
 
----
+   ```bash
+   cd frontend
+   npm install
+   npm run dev   # usually http://localhost:5173
+   ```
 
-## Project Structure
+4. Open the printed URL and sign in with a demo account:
 
-```
-CheckIn/
-├── backend/
-│   ├── Controllers/
-│   │   ├── AdminController.cs
-│   │   ├── AuthController.cs
-│   │   ├── CheckInController.cs
-│   │   └── UserController.cs
-│   ├── Data/
-│   │   ├── AppDbContext.cs
-│   │   └── SeedData.cs
-│   ├── Dto/
-│   │   ├── AuthResponseDto.cs
-│   │   ├── CheckInDto.cs
-│   │   ├── CheckInExportDto.cs
-│   │   ├── CheckInListDto.cs
-│   │   ├── CheckInStatsDto.cs
-│   │   ├── CheckInStatusDto.cs
-│   │   ├── CreateUserDto.cs
-│   │   ├── InviteUserDto.cs
-│   │   ├── AbteilungStatsDto.cs
-│   │   ├── LoginDto.cs
-│   │   ├── SetPasswordDto.cs
-│   │   └── UserDto.cs
-│   ├── Models/
-│   │   ├── AttendanceStatus.cs
-│   │   ├── CheckIn.cs
-│   │   ├── JwtSettings.cs
-│   │   ├── RefreshToken.cs
-│   │   └── User.cs
-│   ├── Services/
-│   │   ├── AuthService.cs
-│   │   ├── CheckInService.cs
-│   │   ├── EmailService.cs
-│   │   ├── IAuthService.cs
-│   │   ├── ICheckInService.cs
-│   │   ├── IEmailService.cs
-│   │   ├── IInvitationService.cs
-│   │   ├── IUserService.cs
-│   │   ├── InvitationService.cs
-│   │   └── UserService.cs
-│   └── Program.cs
-└── frontend/
-    ├── src/
-    │   ├── api/
-    │   │   └── api.jsx
-    │   ├── assets/
-    │   ├── components/
-    │   │   ├── Button.jsx
-    │   │   ├── DateTime.jsx
-    │   │   ├── ExportTable.jsx
-    │   │   ├── Navbar.jsx
-    │   │   ├── StatCard.jsx
-    │   │   └── Toast.jsx
-    │   ├── contexts/
-    │   │   └── AuthContext.jsx
-    │   ├── pages/
-    │   │   ├── AdminList.jsx
-    │   │   ├── AdminManage.jsx
-    │   │   ├── AdminPanel.jsx
-    │   │   ├── CheckInPage.jsx
-    │   │   ├── Dashboard.jsx
-    │   │   ├── Login.jsx
-    │   │   ├── Unauthorized.jsx
-    │   │   └── UserView.jsx
-    │   ├── routes/
-    │   │   └── ProtectedRoute.jsx
-    │   ├── styles/
-    │   │   ├── App.css
-    │   │   ├── components.css
-    │   │   ├── dashboard.css
-    │   │   ├── index.css
-    │   │   └── pages.css
-    │   └── main.jsx
-    └── vite.config.js
-```
+   | Role | Email | Password |
+   |------|-------|----------|
+   | Admin | `admin@checkin.de` | `Admin123!` |
+   | Employee | `l.mueller@checkin.de` | `Passwort123!` |
 
----
+   The seed creates eight employees (all with the password `Passwort123!`) and a check-in for every weekday of 2026. Seeding is idempotent: missing days are added and existing entries stay untouched.
 
-## Getting Started
-
-### Prerequisites
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- [Node.js 18+](https://nodejs.org/)
-- SQL Server LocalDB (included with Visual Studio) or a full SQL Server instance
-
-### Backend
-
-```bash
-cd backend
-
-# Restore packages
-dotnet restore
-
-# Apply migrations and create the database
-dotnet ef database update
-
-# Start the API — runs on https://localhost:7005
-dotnet run
-```
-
-The first run automatically seeds the database with an admin account and sample employees.
-
-**Default credentials:**
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@checkin.de | Admin123! |
-| Mitarbeiter (Employee) | l.mueller@checkin.de | Passwort123! |
-
-### Frontend
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start the dev server — runs on http://localhost:5173
-npm run dev
-```
-
----
-
-## Authentication Flow
-
-```
-Login
-  └─► Access Token (in-memory)  +  Refresh Token (HttpOnly Cookie)
-              │
-              ▼
-       API request with Bearer token
-              │
-         401 Unauthorized?
-              │
-              ▼
-       POST /api/Auth/refresh  ← cookie sent automatically by browser
-              │
-              ▼
-       New Access Token → original request retried
-              │
-         Refresh failed?
-              │
-              ▼
-       Forced logout → redirect to /login
-```
-
-- **Access tokens** expire after 15 minutes and are never written to `localStorage` or `sessionStorage`
-- **Refresh tokens** are valid for 7 days, rotated on every use, and stored as `HttpOnly; Secure; SameSite=None` cookies — inaccessible to JavaScript
-
----
-
-## API Endpoints
-
-### Auth
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/Auth/login` | Public | Login, returns access token + sets refresh cookie |
-| POST | `/api/Auth/refresh` | Public | Issue new access token using HttpOnly cookie |
-| POST | `/api/Auth/logout` | Public | Revoke refresh token and clear cookie |
-| POST | `/api/Auth/set-password` | Public | Set password via invitation token |
-
-### CheckIn (Mitarbeiter / Employee)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/CheckIn/set-status` | Submit today's attendance status |
-| GET | `/api/CheckIn/checkin` | Get current check-in status |
-| GET | `/api/CheckIn/stats/me` | Get personal attendance statistics |
-
-### User (Admin only)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/User` | List all users |
-| GET | `/api/User/{id}` | Get user by ID |
-| GET | `/api/User/stats` | Attendance statistics with filters |
-| GET | `/api/User/stats/abteilungen` | Statistics grouped by department |
-| POST | `/api/User/{userId}/checkin` | Retroactive check-in for an employee |
-| GET | `/api/User/export` | Export attendance data (CSV/PDF rendered in frontend) |
-
-### Admin
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/Admin/invite` | Send invitation email to a new employee |
-
----
+The API only accepts requests from the origins in the CORS policy in [`backend/Program.cs`](backend/Program.cs): `localhost` ports 5173, 5174 and 5176. If Vite picks another port, free port 5173 or add the origin there.
 
 ## Configuration
 
-`backend/appsettings.json`:
+| Key | Description | Required |
+|-----|-------------|----------|
+| `ConnectionStrings:DefaultConnection` | SQL Server connection string | yes |
+| `Jwt:Key` | Secret for signing access tokens, at least 32 characters | yes |
+| `Jwt:Issuer` | Token issuer, for example `CheckInAPI` | yes |
+| `Jwt:Audience` | Token audience, for example `CheckInUsers` | yes |
+| `Jwt:ExpiresInMinutes` | Access token lifetime, 15 is a sensible value | yes |
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=CheckInApiDb;Trusted_Connection=True;"
-  },
-  "Jwt": {
-    "Key": "your-secret-key-minimum-32-characters",
-    "Issuer": "CheckInAPI",
-    "Audience": "CheckInUsers",
-    "ExpiresInMinutes": 15
-  },
-  "Frontend": {
-    "Url": "http://localhost:5173"
-  },
-  "Smtp": {
-    "Host": "smtp.example.com",
-    "Port": "587",
-    "Username": "your@email.com",
-    "Password": "your-password",
-    "From": "noreply@checkin.de"
-  }
-}
+Put them in `backend/appsettings.Development.json`, in environment variables (`Jwt__Key`) or in your deployment's secret store. Never commit real keys or passwords.
+
+## Tests
+
+```bash
+dotnet test backend.Tests/backend.Tests.csproj   # backend, from the repository root
+
+cd frontend
+npm test                                         # frontend
+npm run lint
+npm run test:e2e                                 # browser tests, needs LocalDB and a one-time `npx playwright install chromium`
 ```
+
+366 automated tests cover the services, the seed data, the API with authentication and roles, the React components and pages, and the main flows in a real browser: 105 backend, 225 frontend and 36 end-to-end tests, 18 of them automated accessibility checks in German and English (axe, WCAG 2.1 AA). GitHub Actions runs the backend and frontend tests on every push and pull request. Results and screenshots are in [tests.md](tests.md).
+
+## Documentation
+
+- [Architecture](docs/architecture.md): tech stack, project structure, authentication flow, domain terms
+- [API reference](docs/api.md)
+- [Dashboard and charts](docs/dashboard.md)
+- [Privacy (GDPR)](docs/privacy.md)
+- [Testing guide](docs/testing.md): running, writing and debugging tests, CI
+
+## Known limitations
+
+- There is no e-mail service: accounts come from the seed data, users cannot be invited by e-mail.
+- Demo accounts have fixed, well-known passwords. They are only created in the `Development` environment, so never run a production deployment as `Development`.
+- Demo data and all year filters are limited to 2026.
+- The browser tests (Playwright) run locally only: they need SQL Server LocalDB and are not part of the CI pipeline yet.
+- Accessibility is only checked automatically (axe). Keyboard and screen reader use have not been tested by hand.
+
+## Contributing
+
+Bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Support
+
+Open an issue on [GitHub Issues](https://github.com/TranceMeli/CheckIn/issues).
 
 ## License
 
-This project is licensed under the MIT License.
+[MIT](LICENSE)

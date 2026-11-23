@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using backend.Models;
 
 namespace backend.Data
@@ -33,18 +34,30 @@ namespace backend.Data
         {
             var users = new List<User>
             {
-                new User { UserName = "l.mueller@checkin.de",  Email = "l.mueller@checkin.de",  EmailConfirmed = true, FirstName = "Lukas",  LastName = "Müller",   Abteilung = "Entwicklung" },
-                new User { UserName = "s.schmidt@checkin.de",  Email = "s.schmidt@checkin.de",  EmailConfirmed = true, FirstName = "Sarah",  LastName = "Schmidt",  Abteilung = "Entwicklung" },
-                new User { UserName = "j.weber@checkin.de",    Email = "j.weber@checkin.de",    EmailConfirmed = true, FirstName = "Jonas",  LastName = "Weber",    Abteilung = "IT-Infrastruktur" },
-                new User { UserName = "l.fischer@checkin.de",  Email = "l.fischer@checkin.de",  EmailConfirmed = true, FirstName = "Laura",  LastName = "Fischer",  Abteilung = "IT-Infrastruktur" },
-                new User { UserName = "m.wagner@checkin.de",   Email = "m.wagner@checkin.de",   EmailConfirmed = true, FirstName = "Max",    LastName = "Wagner",   Abteilung = "Support" },
-                new User { UserName = "a.becker@checkin.de",   Email = "a.becker@checkin.de",   EmailConfirmed = true, FirstName = "Anna",   LastName = "Becker",   Abteilung = "Support" },
+                new User { UserName = "l.mueller@checkin.de",  Email = "l.mueller@checkin.de",  EmailConfirmed = true, FirstName = "Lukas",  LastName = "Müller",   Abteilung = "Softwareentwicklung" },
+                new User { UserName = "s.schmidt@checkin.de",  Email = "s.schmidt@checkin.de",  EmailConfirmed = true, FirstName = "Sarah",  LastName = "Schmidt",  Abteilung = "Softwareentwicklung" },
+                new User { UserName = "j.weber@checkin.de",    Email = "j.weber@checkin.de",    EmailConfirmed = true, FirstName = "Jonas",  LastName = "Weber",    Abteilung = "Administration" },
+                new User { UserName = "l.fischer@checkin.de",  Email = "l.fischer@checkin.de",  EmailConfirmed = true, FirstName = "Laura",  LastName = "Fischer",  Abteilung = "Administration" },
+                new User { UserName = "m.wagner@checkin.de",   Email = "m.wagner@checkin.de",   EmailConfirmed = true, FirstName = "Max",    LastName = "Wagner",   Abteilung = "Kundenservice" },
+                new User { UserName = "a.becker@checkin.de",   Email = "a.becker@checkin.de",   EmailConfirmed = true, FirstName = "Anna",   LastName = "Becker",   Abteilung = "Kundenservice" },
                 new User { UserName = "t.hoffmann@checkin.de", Email = "t.hoffmann@checkin.de", EmailConfirmed = true, FirstName = "Tim",    LastName = "Hoffmann", Abteilung = "Vertrieb" },
                 new User { UserName = "j.koch@checkin.de",     Email = "j.koch@checkin.de",     EmailConfirmed = true, FirstName = "Julia",  LastName = "Koch",     Abteilung = "Vertrieb" },
             };
 
             foreach (var user in users)
             {
+                var vorhanden = await userManager.FindByEmailAsync(user.Email!);
+                if (vorhanden != null)
+                {
+                    // Bestandsdaten auf die aktuellen Abteilungsnamen umstellen
+                    if (vorhanden.Abteilung != user.Abteilung)
+                    {
+                        vorhanden.Abteilung = user.Abteilung;
+                        await userManager.UpdateAsync(vorhanden);
+                    }
+                    continue;
+                }
+
                 if (await userManager.FindByEmailAsync(user.Email!) == null)
                 {
                     var result = await userManager.CreateAsync(user, "Passwort123!");
@@ -56,117 +69,63 @@ namespace backend.Data
             }
         }
 
+        // Fiktive Demodaten: Werktage des gesamten Jahres 2026, deterministisch erzeugt.
+        // Idempotent: fehlende Tage werden ergänzt, vorhandene Einträge bleiben unberührt.
         public static async Task SeedCheckInsAsync(AppDbContext context, UserManager<User> userManager)
         {
-            if (context.CheckIns.Any()) return;
+            const int jahr = 2026;
 
-            var lukas = await userManager.FindByEmailAsync("l.mueller@checkin.de");
-            var sarah = await userManager.FindByEmailAsync("s.schmidt@checkin.de");
-            var jonas = await userManager.FindByEmailAsync("j.weber@checkin.de");
-            var laura = await userManager.FindByEmailAsync("l.fischer@checkin.de");
-            var max = await userManager.FindByEmailAsync("m.wagner@checkin.de");
-            var anna = await userManager.FindByEmailAsync("a.becker@checkin.de");
-            var tim = await userManager.FindByEmailAsync("t.hoffmann@checkin.de");
-            var julia = await userManager.FindByEmailAsync("j.koch@checkin.de");
+            var mitarbeiter = (await userManager.GetUsersInRoleAsync("Mitarbeiter"))
+                .OrderBy(u => u.Email)
+                .ToList();
 
-            var checkIns = new List<CheckIn>
+            var vorhanden = (await context.CheckIns
+                    .Where(c => c.Timestamp.Year == jahr)
+                    .Select(c => new { c.UserId, c.Timestamp })
+                    .ToListAsync())
+                .Select(c => (c.UserId, c.Timestamp.Date))
+                .ToHashSet();
+
+            var checkIns = new List<CheckIn>();
+
+            for (var u = 0; u < mitarbeiter.Count; u++)
             {
-                // Lukas Müller – Entwicklung
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = lukas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 14) },
+                var user = mitarbeiter[u];
+                var rnd = new Random(2026 * 100 + u);
 
-                // Sarah Schmidt – Entwicklung
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = sarah!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 14) },
+                // Jeder Mitarbeiter hat einen eigenen Schwerpunkt (Anteil Office / Home Office)
+                var officeAnteil = 0.45 + (u % 4) * 0.12;
 
-                // Jonas Weber – IT-Infrastruktur
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = jonas!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 14) },
+                // Zwei Urlaubsblöcke pro Mitarbeiter (Sommer + Winter), je 5-10 Werktage
+                var urlaub = new List<(DateTime Start, int Tage)>
+                {
+                    (new DateTime(jahr, 7, 6).AddDays(u * 7 % 35), 5 + rnd.Next(6)),
+                    (new DateTime(jahr, 12, 14).AddDays(u % 3), 5 + rnd.Next(4)),
+                };
 
-                // Laura Fischer – IT-Infrastruktur
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = laura!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 14) },
+                for (var tag = new DateTime(jahr, 1, 1); tag.Year == jahr; tag = tag.AddDays(1))
+                {
+                    if (tag.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday) continue;
+                    if (vorhanden.Contains((user.Id, tag))) continue;
 
-                // Max Wagner – Support
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = max!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 14) },
+                    var imUrlaub = urlaub.Any(b => tag >= b.Start && tag < b.Start.AddDays(b.Tage * 7 / 5 + 1));
+                    var zufall = rnd.NextDouble();
 
-                // Anna Becker – Support
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = anna!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 14) },
+                    AttendanceStatus status;
+                    if (imUrlaub || zufall < 0.03) status = AttendanceStatus.Abwesend;       // Urlaub / krank
+                    else if (zufall < 0.03 + officeAnteil * 0.97) status = AttendanceStatus.Office;
+                    else status = AttendanceStatus.HomeOffice;
 
-                // Tim Hoffmann – Vertrieb
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = tim!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 14) },
+                    checkIns.Add(new CheckIn
+                    {
+                        UserId = user.Id,
+                        Status = status,
+                        Timestamp = tag.AddHours(7).AddMinutes(rnd.Next(30, 150)),
+                    });
+                }
+            }
 
-                // Julia Koch – Vertrieb
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 3) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 4) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 5) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 6) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Abwesend,   Timestamp = new DateTime(2026, 3, 7) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 10) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 11) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 12) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.HomeOffice, Timestamp = new DateTime(2026, 3, 13) },
-                new CheckIn { UserId = julia!.Id, Status = AttendanceStatus.Office,     Timestamp = new DateTime(2026, 3, 14) },
-            };
+            if (checkIns.Count == 0) return;
 
             await context.CheckIns.AddRangeAsync(checkIns);
             await context.SaveChangesAsync();

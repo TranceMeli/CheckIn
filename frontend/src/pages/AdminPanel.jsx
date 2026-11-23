@@ -1,249 +1,183 @@
-import { useState, useEffect } from "react";
-import { api } from "../api/api";
-import "../styles/dashboard.css";
+import { useState, useEffect, useMemo } from "react";
+import { Building2, ChevronLeft, ChevronRight, ClipboardCheck, Home, Plane } from "lucide-react";
+import PeriodBar from "../components/PeriodBar";
+import Karte from "../components/Karte";
 import {
-    PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis,
-    Tooltip, Legend, ResponsiveContainer, CartesianGrid
-} from "recharts";
+    JAHR, iso, addDays, mondayOf, fmt, isoWeek, clampToYear, zeitraum,
+} from "../utils/zeitraum";
+import { api } from "../api/api";
+import { useLanguage } from "../i18n/LanguageContext";
+import "../styles/dashboard.css";
 import StatCard from "../components/StatCard";
-
-const FARBEN = {
-    HomeOffice: "#F59E0B",
-    Office:     "#0D9488",
-    Abwesend:   "#EF4444",
-};
-
-const JAHRE = [2024, 2025, 2026];
-const MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni",
-    "Juli", "August", "September", "Oktober", "November", "Dezember"];
-
-const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload?.length) {
-        return (
-            <div style={{
-                background: "#fff", border: "1.5px solid #D1E8E6",
-                borderRadius: 8, padding: "10px 14px", fontSize: 13
-            }}>
-                <p style={{ margin: 0, fontWeight: 600, color: "#263445" }}>{label}</p>
-                {payload.map(p => (
-                    <p key={p.name} style={{ margin: "4px 0 0", color: p.fill ?? p.color }}>
-                        {p.name}: <strong>{p.value}</strong>
-                    </p>
-                ))}
-            </div>
-        );
-    }
-    return null;
-};
-
-const CustomPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-    if (percent < 0.05) return null;
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    return (
-        <text x={x} y={y} fill="#fff" textAnchor="middle" dominantBaseline="central"
-            fontSize={12} fontWeight={600}>
-            {`${(percent * 100).toFixed(0)}%`}
-        </text>
-    );
-};
+import { FARBEN, quote } from "../components/chartConfig";
+import {
+    TrendChart, WeekdayChart, DepartmentShareChart, TargetMeter,
+    YearHeatmap, AbsenceChart, OfficeRanking, TeamWeekGrid,
+} from "../components/DashboardCharts";
 
 function AdminDashboard() {
+    const { t, lang, lbl, pct } = useLanguage();
     const [mitarbeiter, setMitarbeiter] = useState([]);
-    const [abteilungen, setAbteilungen] = useState([]);
-    const [stats, setStats] = useState(null);
-    const [abteilungStats, setAbteilungStats] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [filter, setFilter] = useState({ abteilung: "", userId: "" });
+    const [periode, setPeriode] = useState("month");
+    const [anker, setAnker] = useState(() => clampToYear(new Date()));
+    const [wocheStart, setWocheStart] = useState(() => mondayOf(clampToYear(new Date())));
 
-    const [filter, setFilter] = useState({
-        abteilung: "",
-        userId: "",
-        monat: new Date().getMonth() + 1,
-        jahr: new Date().getFullYear(),
-    });
+    const [overview, setOverview] = useState(null);
+    const [verlauf, setVerlauf] = useState([]);
+    const [heatmap, setHeatmap] = useState([]);
+    const [team, setTeam] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [fehler, setFehler] = useState("");
 
-    useEffect(() => {
-        api.get("/User")
-            .then(res => {
-                setMitarbeiter(res.data);
-                const unique = [...new Set(res.data.map(u => u.abteilung).filter(Boolean))].sort();
-                setAbteilungen(unique);
-            })
-            .catch(err => console.log(err));
-    }, []);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setLoading(true);
-        const params = new URLSearchParams();
-        if (filter.abteilung) params.append("abteilung", filter.abteilung);
-        if (filter.userId) params.append("userId", filter.userId);
-        if (filter.monat) params.append("monat", filter.monat);
-        if (filter.jahr) params.append("jahr", filter.jahr);
-
-        api.get(`/User/stats?${params.toString()}`)
-            .then(res => setStats(res.data))
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
-    }, [filter]);
-
-    useEffect(() => {
-        const params = new URLSearchParams();
-        if (filter.monat) params.append("monat", filter.monat);
-        if (filter.jahr) params.append("jahr", filter.jahr);
-
-        api.get(`/User/stats/abteilungen?${params.toString()}`)
-            .then(res => setAbteilungStats(res.data))
-            .catch(err => console.error(err));
-    }, [filter.monat, filter.jahr]);
-
-    const handleFilter = (e) => {
-        const { name, value } = e.target;
-        if (name === "userId" && value) {
-            setFilter({ ...filter, userId: value, abteilung: "" });
-        } else if (name === "abteilung") {
-            setFilter({ ...filter, abteilung: value, userId: "" });
-        } else {
-            setFilter({ ...filter, [name]: value });
-        }
-    };
-
-    const handleReset = () => setFilter({
-        abteilung: "", userId: "",
-        monat: new Date().getMonth() + 1,
-        jahr: new Date().getFullYear(),
-    });
+    const abteilungen = useMemo(
+        () => [...new Set(mitarbeiter.map(u => u.abteilung).filter(Boolean))].sort(),
+        [mitarbeiter],
+    );
 
     const gefilterteMitarbeiter = filter.abteilung
         ? mitarbeiter.filter(m => m.abteilung === filter.abteilung)
         : mitarbeiter;
 
-    const selectedMitarbeiter = mitarbeiter.find(m => m.id === filter.userId);
+    const { von, bis, label } = zeitraum(periode, anker, lang);
 
-    const pieData = stats ? [
-        { name: "Home Office", value: stats.homeOfficeCount },
-        { name: "Office",      value: stats.officeCount },
-        { name: "Abwesend",    value: stats.abwesendCount },
-    ].filter(d => d.value > 0) : [];
+    useEffect(() => {
+        api.get("/User/mitarbeiter")
+            .then(res => setMitarbeiter(res.data))
+            .catch(() => setFehler("dash.error.employees"));
+    }, []);
 
-    const pieColors = { "Home Office": FARBEN.HomeOffice, Office: FARBEN.Office, Abwesend: FARBEN.Abwesend };
+    const filterParams = useMemo(() => {
+        const p = {};
+        if (filter.abteilung) p.abteilung = filter.abteilung;
+        if (filter.userId) p.userId = filter.userId;
+        return p;
+    }, [filter]);
 
-    const pieTitle = selectedMitarbeiter
-        ? `${selectedMitarbeiter.firstName} ${selectedMitarbeiter.lastName}`
-        : filter.abteilung ? filter.abteilung : "Alle Mitarbeiter";
+    useEffect(() => {
+        let aktuell = true;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Ladezustand muss vor dem Request gesetzt werden
+        setLoading(true);
+        api.get("/Dashboard/overview", { params: { ...filterParams, von: iso(von), bis: iso(bis) } })
+            .then(res => { if (aktuell) { setOverview(res.data); setFehler(""); } })
+            .catch(() => aktuell && setFehler("dash.error.analysis"))
+            .finally(() => aktuell && setLoading(false));
+        return () => { aktuell = false; };
+    }, [filterParams, periode, anker]); // eslint-disable-line react-hooks/exhaustive-deps -- von/bis ergeben sich aus periode und anker
 
-    const statItems = stats ? [
-        { key: "office",     label: "Office",      value: stats.officeCount,     color: FARBEN.Office },
-        { key: "homeOffice", label: "Home Office",  value: stats.homeOfficeCount, color: FARBEN.HomeOffice },
-        { key: "abwesend",   label: "Abwesend",     value: stats.abwesendCount,   color: FARBEN.Abwesend },
-    ] : [];
+    useEffect(() => {
+        let aktuell = true;
+        Promise.all([
+            api.get("/Dashboard/verlauf", { params: { ...filterParams, jahr: JAHR } }),
+            api.get("/Dashboard/heatmap", { params: { ...filterParams, jahr: JAHR } }),
+        ])
+            .then(([v, h]) => { if (aktuell) { setVerlauf(v.data); setHeatmap(h.data); } })
+            .catch(() => aktuell && setFehler("dash.error.trend"));
+        return () => { aktuell = false; };
+    }, [filterParams]);
+
+    useEffect(() => {
+        let aktuell = true;
+        api.get("/Dashboard/team-woche", { params: { montag: iso(wocheStart), abteilung: filter.abteilung || undefined } })
+            .then(res => aktuell && setTeam(res.data))
+            .catch(() => aktuell && setFehler("dash.error.week"));
+        return () => { aktuell = false; };
+    }, [wocheStart, filter.abteilung]);
+
+    const handleFilter = (e) => {
+        const { name, value } = e.target;
+        if (name === "abteilung") setFilter({ abteilung: value, userId: "" });
+        else setFilter({ ...filter, userId: value });
+    };
+
+    const handleReset = () => {
+        setFilter({ abteilung: "", userId: "" });
+        setPeriode("month");
+        const heute = clampToYear(new Date());
+        setAnker(heute);
+        setWocheStart(mondayOf(heute));
+    };
+
+    const wocheBis = addDays(wocheStart, 4);
+    const wocheVorOk = addDays(wocheStart, -7).getFullYear() === JAHR;
+    const wocheNachOk = addDays(wocheStart, 7).getFullYear() === JAHR;
+    const tage = ["Mo", "Di", "Mi", "Do", "Fr"].map((wd, i) => t("day.format", { wd: lbl(wd), dd: String(addDays(wocheStart, i).getDate()).padStart(2, "0") }));
+
+    const g = overview?.gesamt;
 
     return (
         <div className="dashboard">
-            <h1>Auswertungen</h1>
+            <div className="dash-head">
+                <h1>{t("dash.admin.title")}</h1>
 
-            <div className="filter-row">
-                <select name="abteilung" value={filter.abteilung} onChange={handleFilter}>
-                    <option value="">Alle Abteilungen</option>
-                    {abteilungen.map(a => <option key={a} value={a}>{a}</option>)}
-                </select>
-                <select name="userId" value={filter.userId} onChange={handleFilter}>
-                    <option value="">Alle Mitarbeiter</option>
-                    {gefilterteMitarbeiter.map(m => (
-                        <option key={m.id} value={m.id}>
-                            {m.firstName} {m.lastName} ({m.abteilung})
-                        </option>
-                    ))}
-                </select>
-                <select name="monat" value={filter.monat} onChange={handleFilter}>
-                    <option value="">Alle Monate</option>
-                    {MONATE.map((m, i) => (
-                        <option key={i + 1} value={i + 1}>{m}</option>
-                    ))}
-                </select>
-                <select name="jahr" value={filter.jahr} onChange={handleFilter}>
-                    {JAHRE.map(j => <option key={j} value={j}>{j}</option>)}
-                </select>
-                <button onClick={handleReset}>Zurücksetzen</button>
+                <PeriodBar periode={periode} onPeriode={setPeriode} anker={anker} onAnker={setAnker} label={label} />
             </div>
 
-            {loading && <p style={{ color: "#5E7B7A", padding: "8px 0" }}>Lädt...</p>}
+            <div className="filter-row">
+                <select name="abteilung" value={filter.abteilung} onChange={handleFilter} aria-label={t("dash.filter.department")}>
+                    <option value="">{t("dash.filter.allDepartments")}</option>
+                    {abteilungen.map(a => <option key={a} value={a}>{lbl(a)}</option>)}
+                </select>
+                <select name="userId" value={filter.userId} onChange={handleFilter} aria-label={t("dash.filter.employee")}>
+                    <option value="">{t("dash.filter.allEmployees")}</option>
+                    {gefilterteMitarbeiter.map(m => (
+                        <option key={m.id} value={m.id}>{m.firstName} {m.lastName} ({lbl(m.abteilung)})</option>
+                    ))}
+                </select>
+                <button type="button" onClick={handleReset}>{t("dash.filter.reset")}</button>
+            </div>
 
-            {stats && !loading && (
-                <>
+            {fehler && <p className="form-error" role="alert">{t(fehler)}</p>}
+
+            <div className={`dash-body${loading ? " is-loading" : ""}`} aria-busy={loading}>
+                {g && (
                     <div className="stats-cards">
-                        <StatCard label="Gesamt" value={stats.total} />
-                        {statItems.map(item => (
-                            <StatCard key={item.key} label={item.label} value={item.value} color={item.color} />
-                        ))}
+                        <StatCard label={t("dash.stat.officeRate")} value={pct(quote(g.office, g.total))} color={FARBEN.office} icon={<Building2 size={20} />} />
+                        <StatCard label={t("dash.stat.homeRate")} value={pct(quote(g.homeOffice, g.total))} color={FARBEN.homeOffice} icon={<Home size={20} />} />
+                        <StatCard label={t("dash.stat.absenceRate")} value={pct(quote(g.abwesend, g.total))} color={FARBEN.abwesend} icon={<Plane size={20} />} />
+                        <StatCard label={t("dash.stat.total")} value={g.total} color={FARBEN.nav} icon={<ClipboardCheck size={20} />} />
                     </div>
+                )}
 
-                    <div className="charts-row">
-                        <div className="chart-box">
-                            <h3>{pieTitle} – {filter.monat ? MONATE[filter.monat - 1] : "Gesamt"} {filter.jahr}</h3>
-                            {pieData.length === 0 ? (
-                                <p style={{ textAlign: "center", color: "#5E7B7A", padding: 40 }}>
-                                    Keine Einträge
-                                </p>
-                            ) : (
-                                <ResponsiveContainer width="100%" height={260}>
-                                    <PieChart>
-                                        <Pie
-                                            data={pieData}
-                                            dataKey="value"
-                                            nameKey="name"
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={55}
-                                            outerRadius={95}
-                                            paddingAngle={3}
-                                            labelLine={false}
-                                            label={CustomPieLabel}
-                                        >
-                                            {pieData.map(entry => (
-                                                <Cell key={entry.name} fill={pieColors[entry.name]} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip content={<CustomTooltip />} />
-                                        <Legend formatter={(value) => (
-                                            <span style={{ fontSize: 13, color: "#263445" }}>{value}</span>
-                                        )} />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            )}
-                        </div>
-
-                        <div className="chart-box">
-                            <h3>Vergleich pro Abteilung – {filter.monat ? MONATE[filter.monat - 1] : "Gesamt"} {filter.jahr}</h3>
-                            {abteilungStats.length === 0 ? (
-                                <p style={{ textAlign: "center", color: "#5E7B7A", padding: 40 }}>
-                                    Keine Daten
-                                </p>
-                            ) : (
-                                <ResponsiveContainer width="100%" height={260}>
-                                    <BarChart
-                                        data={abteilungStats}
-                                        margin={{ top: 8, right: 8, left: -16, bottom: 4 }}
-                                    >
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#E0F0EE" vertical={false} />
-                                        <XAxis dataKey="abteilung" tick={{ fontSize: 11, fill: "#5E7B7A" }} />
-                                        <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "#5E7B7A" }} />
-                                        <Tooltip content={<CustomTooltip />} />
-                                        <Legend formatter={(value) => (
-                                            <span style={{ fontSize: 13, color: "#263445" }}>{value}</span>
-                                        )} />
-                                        <Bar dataKey="homeOffice" name="Home Office" fill={FARBEN.HomeOffice} radius={[4,4,0,0]} />
-                                        <Bar dataKey="office"     name="Office"      fill={FARBEN.Office}     radius={[4,4,0,0]} />
-                                        <Bar dataKey="abwesend"   name="Abwesend"    fill={FARBEN.Abwesend}   radius={[4,4,0,0]} />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            )}
-                        </div>
+                <Karte titel={t("dash.card.teamWeek", { week: isoWeek(wocheStart) })} hinweis={`${fmt(wocheStart, lang)} – ${fmt(wocheBis, lang)}`} className="chart-box--full">
+                    <div className="week-nav">
+                        <button type="button" aria-label={t("dash.week.prev")} disabled={!wocheVorOk} onClick={() => setWocheStart(addDays(wocheStart, -7))}><ChevronLeft size={16} /></button>
+                        <button type="button" aria-label={t("dash.week.next")} disabled={!wocheNachOk} onClick={() => setWocheStart(addDays(wocheStart, 7))}><ChevronRight size={16} /></button>
                     </div>
-                </>
-            )}
+                    <TeamWeekGrid data={team} tage={tage} />
+                </Karte>
+
+                <div className="charts-row charts-row--wide">
+                    <Karte titel={t("dash.card.trend")} hinweis={t("dash.hint.target", { target: 60 })}>
+                        <TrendChart data={verlauf} />
+                    </Karte>
+                    <Karte titel={t("dash.card.target")} hinweis={label}>
+                        <TargetMeter office={g?.office ?? 0} total={g?.total ?? 0} />
+                    </Karte>
+                </div>
+
+                <div className="charts-row">
+                    <Karte titel={t("dash.card.byWeekday")} hinweis={label}>
+                        <WeekdayChart data={overview?.wochentage ?? []} />
+                    </Karte>
+                    <Karte titel={t("dash.card.byDepartment")} hinweis={label}>
+                        <DepartmentShareChart data={overview?.abteilungen ?? []} />
+                    </Karte>
+                </div>
+
+                <Karte titel={t("dash.card.heatmap")} hinweis={`${JAHR}`} className="chart-box--full">
+                    <YearHeatmap data={heatmap} />
+                </Karte>
+
+                <div className="charts-row">
+                    <Karte titel={t("dash.card.absences")} hinweis={label}>
+                        <AbsenceChart data={overview?.abteilungen ?? []} />
+                    </Karte>
+                    <Karte titel={t("dash.card.ranking")} hinweis={label}>
+                        <OfficeRanking data={overview?.ranking ?? []} />
+                    </Karte>
+                </div>
+            </div>
         </div>
     );
 }

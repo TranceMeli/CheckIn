@@ -2,14 +2,14 @@
     --nav:           #263445;
     --nav-light:     #2f4157;
     --nav-muted:     rgba(255,255,255,0.07);
-    --primary:       #0D9488;
-    --primary-hover: #0b7c76;
+    --primary:       #0F766E;
+    --primary-hover: #115E59;
     --primary-light: #F0FDFB;
     --bg:            #F0FDFB;
     --surface:       #FFFFFF;
     --border:        #D1E8E6;
     --text:          #1A2E2D;
-    --text-muted:    #5E7B7A;
+    --text-muted:    #4F6B6A;
     --success:       #10B981;
     --danger:        #EF4444;
     --warning:       #F59E0B;
@@ -18,36 +18,53 @@
     --color-homeoffice:  #F59E0B;
     --color-abwesend:    #EF4444;
 
-    --radius:    8px;
-    --radius-lg: 12px;
+    --radius:    0.5rem;
+    --radius-lg: 0.75rem;
     --shadow:    0 1px 3px rgba(38,52,69,0.08);
     --shadow-md: 0 4px 16px rgba(38,52,69,0.12);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Nur für Screenreader sichtbar */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+html {
+    /* fluid: 16px auf Handy/Laptop, ~20px auf 24" Full-HD, max 24px */
+    font-size: clamp(16px, 0.5vw + 10.5px, 24px);
+    -webkit-text-size-adjust: 100%;
+}
+
 html, body, #root {
     height: 100%;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 15px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5; /* Fließtext mindestens 1,5 (WCAG-Empfehlung) */
     color: var(--text);
     background: var(--bg);
 }
 
 h1, h2, h3 {
-    margin: 0 0 8px;
+    margin: 0 0 0.5rem;
+    line-height: 1.3;
     font-weight: 600;
     color: var(--nav);
 }
 
 button {
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 500;
     border-radius: var(--radius);
     border: none;
-    padding: 8px 18px;
+    padding: 0.5rem 1.125rem;
     transition: background 0.15s, opacity 0.15s;
 }
 
@@ -57,27 +74,42 @@ button:disabled {
 }
 
 select {
-    height: 40px;
-    padding: 0 12px;
+    height: 2.5rem;
+    padding: 0 0.75rem;
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
     background: var(--surface);
     color: var(--text);
-    font-size: 14px;
+    font-size: 0.875rem;
     cursor: pointer;
 }
 
 select:focus {
-    outline: none;
     border-color: var(--primary);
 }
 
+/* Sichtbarer Tastaturfokus für alle bedienbaren Elemente. Bei Eingabefeldern ersetzt der Ring den
+   früheren reinen Rahmenfarbwechsel, der zu schwach zu erkennen war. */
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 input {
-    height: 40px;
-    padding: 0 12px;
+    height: 2.5rem;
+    padding: 0 0.75rem;
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
-    font-size: 14px;
+    font-size: 0.875rem;
     width: 100%;
     color: var(--text);
     background: var(--surface);
@@ -85,7 +117,6 @@ input {
 }
 
 input:focus {
-    outline: none;
     border-color: var(--primary);
 }
 
