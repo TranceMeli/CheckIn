@@ -29,10 +29,10 @@
     margin-bottom: 0.25rem;
 }
 
-.account-icon {
-    width: 7rem;
-    height: 7rem;
-    color: var(--primary);
+/* Logo der Anmeldeseite; die SVG hat ein festes Seitenverhältnis, die Höhe ergibt sich aus der Breite */
+.login-logo {
+    width: 7.5rem;
+    height: auto;
     margin: 0.5rem 0 1rem;
 }
 

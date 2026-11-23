@@ -144,6 +144,15 @@ describe('Login', () => {
     expect(screen.getByRole('link', { name: 'Datenschutz' })).toBeInTheDocument()
   })
 
+  it('shows the logo as a decoration next to the heading', () => {
+    renderLogin()
+
+    const logo = document.querySelector('img.login-logo')
+    expect(logo).not.toBeNull()
+    expect(logo).toHaveAttribute('alt', '')
+    expect(logo.getAttribute('src')).toMatch(/svg/)
+  })
+
   it('signs in, hands over the token and redirects to the dashboard', async () => {
     const post = vi.spyOn(axios, 'post').mockResolvedValue({ data: { accessToken: 'tok', roles: ['Admin'] } })
     const login = renderLogin()

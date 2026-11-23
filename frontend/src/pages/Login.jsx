@@ -3,7 +3,7 @@ import '../styles/pages.css';
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import accountIcon from "../assets/account_icon.svg";
+import logo from "../assets/checkin_logo.svg";
 import { Toaster, toast } from "react-hot-toast";
 import Footer from "../components/Footer";
 import LanguageSwitch from "../components/LanguageSwitch";
@@ -51,7 +51,7 @@ const Login = () => {
             <div className="lang-corner"><LanguageSwitch variant="light" /></div>
             <div className="login-container">
                 <h1>{t("login.title")}</h1>
-                <img src={accountIcon} className="account-icon" alt="" />
+                <img src={logo} className="login-logo" alt="" />
                 <form onSubmit={handleSubmit}>
                     <label>
                         {t("login.email")}

@@ -92,8 +92,10 @@ test.describe('Language switch', () => {
 
     await hauptnavigation(page, 'en').getByRole('link', { name: 'Check-in' }).click();
 
-    await expect(page.getByText('Home office', { exact: true })).toBeVisible();
-    await expect(page.getByText('Absent', { exact: true })).toBeVisible();
+    // Erst warten, bis die Check-in-Seite da ist: Die Legenden der Statistik enthalten dieselben Wörter.
+    await expect(page).toHaveURL(/\/checkin$/);
+    await expect(page.locator('.card-title', { hasText: 'Home office' })).toBeVisible();
+    await expect(page.locator('.card-title', { hasText: 'Absent' })).toBeVisible();
   });
 
   test('signing out keeps the chosen language', async ({ page }) => {
